@@ -1,0 +1,5 @@
+exe coulomb-hydrogen-proton
+    : experiments/coulomb-hydrogen-proton.cpp ../simulbody//simulbody
+    : <include>../ <define>BOOST_ALL_NO_LIB=1
+    : <cxxflags>-std=c++11
+    ;
