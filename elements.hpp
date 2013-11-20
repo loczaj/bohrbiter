@@ -9,7 +9,7 @@ using namespace std;
 
 // TODO finish declaring elements over z=18
 enum class Element
-	: unsigned int {
+	: int {
 		H = 1, He, Li, Be, B, C, N, O, F, Ne, Na, Mg, Al, Si, P, S, Cl, Ar
 };
 

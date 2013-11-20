@@ -9,14 +9,26 @@
 using namespace simulbody;
 
 class Atom {
+protected:
+	Element element;
+	Element electronConfiguration;
+	unsigned int massNumber;
+
+	double nucleusMass;
+	double nucleusCharge;
+
 	identifier nucleus;
 	std::map<std::string, identifier> electrons;
-
 	std::vector<Interaction> interactions;
 
 public:
-	Atom(Element element, unsigned int massNumber);
-	Atom(Element element, unsigned int massNumber, unsigned int electronNumber);
+	Atom(System &system, Element element, unsigned int massNumber);
+	Atom(System &system, Element element, unsigned int massNumber, Element electronConfiguration);
+
+	identifier getNucleus();
+	std::vector<identifier> getElectrons();
+	identifier getElectron(std::size_t orbit);
+	identifier getElectron(std::string orbitName);
 
 	virtual void moveTo(System &system, vector3D position);
 	virtual void speedUp(System &system, vector3D velocity);
@@ -28,6 +40,9 @@ public:
 	virtual double getAngularMomentum(System &system, identifier electron) const;
 
 	virtual ~Atom();
+
+	static constexpr double electronMass = 1.0;
+	static orbitals orbits;
 };
 
 #endif /* ATOM_HPP */
