@@ -22,27 +22,36 @@ protected:
 	std::vector<Interaction> interactions;
 
 public:
+	std::vector<std::string> orbitNames;
+
 	Atom(System &system, Element element, unsigned int massNumber);
 	Atom(System &system, Element element, unsigned int massNumber, Element electronConfiguration);
 
-	identifier getNucleus();
-	std::vector<identifier> getElectrons();
-	identifier getElectron(std::size_t orbit);
-	identifier getElectron(std::string orbitName);
+	identifier getNucleus() const;
+	std::vector<identifier> getElectrons() const;
+	std::vector<identifier> getBodies() const;
+	identifier getElectron(std::size_t orbit) const;
+	identifier getElectron(std::string orbitName) const;
 
-	virtual void moveTo(System &system, vector3D position);
-	virtual void speedUp(System &system, vector3D velocity);
+	vector3D getPosition(System &system) const;
+	vector3D getVelocity(System &system) const;
+	vector3D getImpulse(System &system) const;
+	double getMass(System &system) const;
+
+	void setPosition(System &system, vector3D position);
+	void setVelocity(System &system, vector3D velocity);
 
 	virtual void install(System &system) = 0;
 	virtual void setInteractions() = 0;
 
-	virtual double getOrbitalEnergy(System &system, identifier electron) const;
-	virtual double getAngularMomentum(System &system, identifier electron) const;
+	virtual double getEnergy(System &system) const;
+	virtual double getOrbitalEnergy(System &system, std::string orbit) const;
+	virtual vector3D getAngularMomentum(System &system, std::string orbit) const;
 
-	virtual ~Atom();
+	virtual ~Atom() {
+	}
 
 	static constexpr double electronMass = 1.0;
-	static orbitals orbits;
 };
 
 #endif /* ATOM_HPP */
