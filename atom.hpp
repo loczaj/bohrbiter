@@ -19,7 +19,7 @@ protected:
 
 	identifier nucleus;
 	std::map<std::string, identifier> electrons;
-	std::vector<Interaction> interactions;
+	std::vector<Interaction*> interactions;
 
 public:
 	std::vector<std::string> orbitNames;
@@ -42,14 +42,14 @@ public:
 	void setVelocity(System &system, vector3D velocity);
 
 	virtual void install(System &system) = 0;
-	virtual void setInteractions() = 0;
+	virtual void randomize(System &system) = 0;
+	virtual void createInteractions() = 0;
 
 	virtual double getEnergy(System &system) const;
 	virtual double getOrbitalEnergy(System &system, std::string orbit) const;
-	virtual vector3D getAngularMomentum(System &system, std::string orbit) const;
+	virtual vector3D getOrbitalAngularMomentum(System &system, std::string orbit) const;
 
-	virtual ~Atom() {
-	}
+	virtual ~Atom();
 
 	static constexpr double electronMass = 1.0;
 };

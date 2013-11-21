@@ -19,7 +19,8 @@ Atom::Atom(System &system, Element element, unsigned int massNumber, Element ele
 		electrons[orbitName] = system.createBody(electronMass);
 	}
 
-	setInteractions();
+	createInteractions();
+	install(system);
 }
 
 identifier Atom::getNucleus() const {
@@ -49,11 +50,11 @@ identifier Atom::getElectron(string orbitName) const {
 }
 
 vector3D Atom::getPosition(System &system) const {
-	return system.getCenterOfMass(getBodies());
+	return system.getGroupCenterOfMass(getBodies());
 }
 
 vector3D Atom::getImpulse(System &system) const {
-	return system.getImpulse(getBodies());
+	return system.getGroupImpulse(getBodies());
 }
 
 vector3D Atom::getVelocity(System &system) const {
@@ -61,7 +62,7 @@ vector3D Atom::getVelocity(System &system) const {
 }
 
 double Atom::getMass(System &system) const {
-	return system.getMass(getBodies());
+	return system.getGroupMass(getBodies());
 }
 
 void Atom::setPosition(System &system, vector3D position) {
@@ -111,7 +112,13 @@ double Atom::getOrbitalEnergy(System &system, std::string orbit) const {
 	return energy;
 }
 
-vector3D Atom::getAngularMomentum(System &system, std::string orbit) const {
+vector3D Atom::getOrbitalAngularMomentum(System &system, std::string orbit) const {
 	identifier electron = getElectron(orbit);
 	return system.getBodyAngularMomentum(electron, nucleus);
+}
+
+Atom::~Atom() {
+	for (Interaction* interaction : interactions) {
+		delete interaction;
+	}
 }
