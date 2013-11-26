@@ -18,9 +18,6 @@ Atom::Atom(System &system, Element element, unsigned int massNumber, Element ele
 	for (string orbitName : orbitNames) {
 		electrons[orbitName] = system.createBody(electronMass);
 	}
-
-	createInteractions(system);
-	install(system);
 }
 
 identifier Atom::getNucleus() const {
@@ -117,7 +114,4 @@ vector3D Atom::getOrbitalAngularMomentum(System &system, std::string orbit) cons
 }
 
 Atom::~Atom() {
-	for (Interaction* interaction : interactions) {
-		delete interaction;
-	}
 }
