@@ -8,13 +8,13 @@ Atom::Atom(System &system, Element element, unsigned int massNumber)
 }
 
 Atom::Atom(System &system, Element element, unsigned int massNumber, Element electronConfiguration)
-		: element(element), massNumber(massNumber), electronConfiguration(electronConfiguration) {
+		: element(element), electronConfiguration(electronConfiguration), massNumber(massNumber) {
 
 	nucleusMass = 1836.1 * (double) massNumber;
 	nucleusCharge = (double) atomicNumber(element);
 	nucleus = system.createBody(nucleusMass);
 
-	orbitNames = vector<string>(orbitals()[electronConfiguration]);
+	orbitNames = vector<string>(orbitals().at(electronConfiguration));
 	for (string orbitName : orbitNames) {
 		electrons[orbitName] = system.createBody(electronMass);
 	}
@@ -45,7 +45,7 @@ identifier Atom::getElectron(size_t orbit) const {
 }
 
 identifier Atom::getElectron(string orbitName) const {
-	return electrons[orbitName];
+	return electrons.at(orbitName);
 }
 
 vector3D Atom::getPosition(System &system) const {

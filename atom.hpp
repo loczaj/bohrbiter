@@ -41,9 +41,12 @@ public:
 	void setPosition(System &system, vector3D position);
 	void setVelocity(System &system, vector3D velocity);
 
-	virtual void install(System &system) = 0;
-	virtual void randomize(System &system) = 0;
-	virtual void createInteractions(System &system) = 0;
+	virtual void install(System &system) {
+	}
+	virtual void randomize(System &system) {
+	}
+	virtual void createInteractions(System &system) {
+	}
 
 	virtual double getEnergy(System &system) const;
 	virtual double getOrbitalEnergy(System &system, std::string orbit) const;

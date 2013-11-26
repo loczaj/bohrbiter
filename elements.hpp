@@ -13,7 +13,7 @@ enum class Element
 		H = 1, He, Li, Be, B, C, N, O, F, Ne, Na, Mg, Al, Si, P, S, Cl, Ar
 };
 
-int atomicNumber(Element const value) {
+inline int atomicNumber(Element const value) {
 	return static_cast<int>(value);
 }
 
@@ -27,28 +27,28 @@ vector<T> append(const vector<T> &a, const vector<T> &b) {
 struct orbitals: public map<Element, vector<string>> {
 
 	orbitals() {
-		at(Element::H) = {"1s1"};
-		at(Element::He) = {"1s1", "1s2"};
+		operator[](Element::H) = {"1s1"};
+		operator[](Element::He) = {"1s1", "1s2"};
 
-		at(Element::Li) = {"1s1", "1s2", "2s1"};
-		at(Element::Be) = {"1s1", "1s2", "2s1", "2s2"};
+		operator[](Element::Li) = {"1s1", "1s2", "2s1"};
+		operator[](Element::Be) = {"1s1", "1s2", "2s1", "2s2"};
 
-		at(Element::B) = append(at(Element::Be), {"2p1"});
-		at(Element::C) = append(at(Element::Be), {"2p1", "2p2"});
-		at(Element::N) = append(at(Element::Be), {"2p1", "2p2", "2p3"});
-		at(Element::O) = append(at(Element::Be), {"2p1", "2p2", "2p3", "2p4"});
-		at(Element::F) = append(at(Element::Be), {"2p1", "2p2", "2p3", "2p4", "2p5"});
-		at(Element::Ne) = append(at(Element::Be), {"2p1", "2p2", "2p3", "2p4", "2p5", "2p6"});
+		operator[](Element::B) = append(at(Element::Be), {"2p1"});
+		operator[](Element::C) = append(at(Element::Be), {"2p1", "2p2"});
+		operator[](Element::N) = append(at(Element::Be), {"2p1", "2p2", "2p3"});
+		operator[](Element::O) = append(at(Element::Be), {"2p1", "2p2", "2p3", "2p4"});
+		operator[](Element::F) = append(at(Element::Be), {"2p1", "2p2", "2p3", "2p4", "2p5"});
+		operator[](Element::Ne) = append(at(Element::Be), {"2p1", "2p2", "2p3", "2p4", "2p5", "2p6"});
 
-		at(Element::Na) = append(at(Element::Ne), {"3s1"});
-		at(Element::Mg) = append(at(Element::Ne), {"3s1", "3s2"});
+		operator[](Element::Na) = append(at(Element::Ne), {"3s1"});
+		operator[](Element::Mg) = append(at(Element::Ne), {"3s1", "3s2"});
 
-		at(Element::Al) = append(at(Element::Mg), {"3p1"});
-		at(Element::Si) = append(at(Element::Mg), {"3p1", "3p2"});
-		at(Element::P) = append(at(Element::Mg), {"3p1", "3p2", "3p3"});
-		at(Element::S) = append(at(Element::Mg), {"3p1", "3p2", "3p3", "3p4"});
-		at(Element::Cl) = append(at(Element::Mg), {"3p1", "3p2", "3p3", "3p4", "3p5"});
-		at(Element::Ar) = append(at(Element::Mg), {"3p1", "3p2", "3p3", "3p4", "3p5", "3p6"});
+		operator[](Element::Al) = append(at(Element::Mg), {"3p1"});
+		operator[](Element::Si) = append(at(Element::Mg), {"3p1", "3p2"});
+		operator[](Element::P) = append(at(Element::Mg), {"3p1", "3p2", "3p3"});
+		operator[](Element::S) = append(at(Element::Mg), {"3p1", "3p2", "3p3", "3p4"});
+		operator[](Element::Cl) = append(at(Element::Mg), {"3p1", "3p2", "3p3", "3p4", "3p5"});
+		operator[](Element::Ar) = append(at(Element::Mg), {"3p1", "3p2", "3p3", "3p4", "3p5", "3p6"});
 	}
 };
 
