@@ -1,6 +1,7 @@
 #ifndef ATOM_HPP
 #define ATOM_HPP
 
+#include <random>
 #include <vector>
 #include <simulbody/simulator.hpp>
 
@@ -42,7 +43,7 @@ public:
 	void setVelocity(System &system, vector3D velocity);
 
 	virtual void install(System &system) = 0;
-	virtual void randomize(System &system) = 0;
+	virtual void randomize(System &system, std::mt19937_64 &randomGenerator) = 0;
 	virtual void createInteractions(System &system) = 0;
 
 	virtual double getEnergy(System &system) const;
