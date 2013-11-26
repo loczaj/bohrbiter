@@ -10,7 +10,7 @@ Atom::Atom(System &system, Element element, unsigned int massNumber)
 Atom::Atom(System &system, Element element, unsigned int massNumber, Element electronConfiguration)
 		: element(element), massNumber(massNumber), electronConfiguration(electronConfiguration) {
 
-	nucleusMass = 1836.0 * (double) massNumber;
+	nucleusMass = 1836.1 * (double) massNumber;
 	nucleusCharge = (double) atomicNumber(element);
 	nucleus = system.createBody(nucleusMass);
 
