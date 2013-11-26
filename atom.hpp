@@ -43,7 +43,7 @@ public:
 
 	virtual void install(System &system) = 0;
 	virtual void randomize(System &system) = 0;
-	virtual void createInteractions() = 0;
+	virtual void createInteractions(System &system) = 0;
 
 	virtual double getEnergy(System &system) const;
 	virtual double getOrbitalEnergy(System &system, std::string orbit) const;

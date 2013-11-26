@@ -19,7 +19,7 @@ Atom::Atom(System &system, Element element, unsigned int massNumber, Element ele
 		electrons[orbitName] = system.createBody(electronMass);
 	}
 
-	createInteractions();
+	createInteractions(system);
 	install(system);
 }
 
@@ -36,8 +36,7 @@ vector<identifier> Atom::getElectrons() const {
 }
 
 std::vector<identifier> Atom::getBodies() const {
-	vector<identifier> bodies = getElectrons();
-	bodies.push_back(nucleus);
+	vector<identifier> bodies = append( { nucleus }, getElectrons());
 	return bodies;
 }
 

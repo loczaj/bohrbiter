@@ -17,13 +17,14 @@ int atomicNumber(Element const value) {
 	return static_cast<int>(value);
 }
 
-struct orbitals: public map<Element, vector<string>> {
+template<class T>
+vector<T> append(const vector<T> &a, const vector<T> &b) {
+	vector<T> sum(a);
+	sum.insert(sum.end(), b.begin(), b.end());
+	return sum;
+}
 
-	vector<string> append(const vector<string> &a, const vector<string> &b) {
-		vector<string> sum(a);
-		sum.insert(sum.end(), b.begin(), b.end());
-		return sum;
-	}
+struct orbitals: public map<Element, vector<string>> {
 
 	orbitals() {
 		at(Element::H) = {"1s1"};
