@@ -41,8 +41,8 @@ public:
 		double thetaN = distNull2Pi(randomGenerator);
 
 		double u = solveKeplerEquation(thetaN, epsilon, 0.5, 1e-10);
-		double a = nucleusCharge / (2.0 * 0.500544188);
-		double b = sqrt(2.0 * 1.0 * 0.500544188);
+		double a = nucleusCharge / (2.0 * 0.5);
+		double b = sqrt(2.0 * 0.9994556638 * 0.5);
 
 		vector3D c00(0, a * sqrt(1 - epsilon * epsilon) * sin(u), a * (cos(u) - epsilon));
 		vector3D p00(0, b * sqrt(1 - epsilon * epsilon) * cos(u) / (1 - epsilon * cos(u)),
@@ -52,7 +52,7 @@ public:
 		vector3D p0 = p00.eulerRotation(phi, theta, eta);
 
 		system.setBodyPosition(getElectron("1s1"), system.getBodyPosition(nucleus) + c0);
-		system.setBodyVelocity(getElectron("1s1"), system.getBodyVelocity(nucleus) + p0);
+		system.setBodyVelocity(getElectron("1s1"), system.getBodyVelocity(nucleus) + p0 / 0.9994556638);
 	}
 
 	virtual void createInteractions(System &system) {

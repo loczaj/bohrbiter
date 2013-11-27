@@ -25,13 +25,11 @@ int main(int argc, char* argv[]) {
 	cout << hydrogen.getOrbitalEnergy(bbsystem, "1s1") << endl;
 	cout << hydrogen.getOrbitalAngularMomentum(bbsystem, "1s1") << endl << endl;
 
-	cout << hydrogen.getOrbitalEnergy(bbsystem, "1s1") << "\t"
-			<< hydrogen.getOrbitalAngularMomentum(bbsystem, "1s1").abs() << endl;
+	cout << hydrogen.getOrbitalEnergy(bbsystem, "1s1") << "\t" << hydrogen.getEnergy(bbsystem) << endl;
 
 	for (int i = 0; i < 10; i++) {
 		hydrogen.randomize(bbsystem, randomGenerator);
-		cout << hydrogen.getOrbitalEnergy(bbsystem, "1s1") << "\t"
-				<< hydrogen.getOrbitalAngularMomentum(bbsystem, "1s1").abs() << endl;
+		cout << hydrogen.getOrbitalEnergy(bbsystem, "1s1") << "\t" << hydrogen.getEnergy(bbsystem) << endl;
 	}
 
 	return 0;
