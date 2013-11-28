@@ -12,10 +12,10 @@ Atom::Atom(System* system, Element element, unsigned int massNumber, Element ele
 				massNumber) {
 
 	nucleusMass = 1836.1 * (double) massNumber;
-	nucleusCharge = (double) atomicNumber(element);
+	nucleusCharge = (double) PeriodicTable::atomicNumber(element);
 	nucleus = system->createBody(nucleusMass);
 
-	orbitNames = vector<string>(orbitals().at(electronConfiguration));
+	orbitNames = PeriodicTable().atomicOrbitals(electronConfiguration);
 	for (string orbitName : orbitNames) {
 		electrons[orbitName] = system->createBody(electronMass);
 	}
