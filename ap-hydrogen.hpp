@@ -11,8 +11,8 @@ using namespace simulbody;
 
 class AbrinesPercivalHydrogen: public Atom {
 public:
-	AbrinesPercivalHydrogen(System &system)
-			: Atom(system, Element::H, 1) {
+	AbrinesPercivalHydrogen(System &system, Element nucleus = Element::H, int massNumber = 1)
+			: Atom(system, nucleus, massNumber, Element::H) {
 		createInteractions(system);
 		install(system);
 	}
@@ -41,8 +41,8 @@ public:
 		double thetaN = distNull2Pi(randomGenerator);
 
 		double u = solveKeplerEquation(thetaN, epsilon, 0.5, 1e-10);
-		double a = nucleusCharge / (2.0 * 0.5);
-		double b = sqrt(2.0 * 0.5);
+		double a = nucleusCharge / (2.0 * 0.5 * pow(nucleusCharge, 2));
+		double b = sqrt(2.0 * 0.5 * pow(nucleusCharge, 2));
 
 		vector3D c00(0, a * sqrt(1 - epsilon * epsilon) * sin(u), a * (cos(u) - epsilon));
 		vector3D p00(0, b * sqrt(1 - epsilon * epsilon) * cos(u) / (1 - epsilon * cos(u)),
@@ -57,7 +57,7 @@ public:
 
 	virtual void createInteractions(System &system) {
 		interactions.resize(1);
-		interactions[0] = new CoulombInteraction(-1.0, getNucleus(), getElectron("1s1"));
+		interactions[0] = new CoulombInteraction(-1.0 * nucleusCharge, getNucleus(), getElectron("1s1"));
 		system.addInteraction(interactions[0]);
 	}
 
