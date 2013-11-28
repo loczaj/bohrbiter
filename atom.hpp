@@ -55,6 +55,7 @@ public:
 	virtual ~Atom();
 
 	static constexpr double electronMass = 1.0;
+	static constexpr double protonMass = 1836.1527;
 };
 
 #endif /* ATOM_HPP */
