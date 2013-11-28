@@ -9,7 +9,7 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
 	System bbsystem;
-	AbrinesPercivalHydrogen hydrogen(&bbsystem);
+	AbrinesPercivalHydrogen hydrogen(&bbsystem, Element::H, 1);
 
 	std::mt19937_64 randomGenerator;
 	randomGenerator.seed(std::mt19937_64::default_seed);
