@@ -10,9 +10,12 @@
 using namespace simulbody;
 
 class AbrinesPercivalHydrogen: public Atom {
+	double reducedMass;
+
 public:
 	AbrinesPercivalHydrogen(System* system, Element nucleus = Element::H, int massNumber = 1)
 			: Atom(system, nucleus, massNumber, Element::H) {
+		reducedMass = (electronMass * nucleusMass) / (electronMass + nucleusMass);
 		createInteractions();
 		install();
 	}
@@ -21,7 +24,7 @@ public:
 		system->setBodyPosition(getNucleus(), vector3D(0, 0, 0));
 		system->setBodyVelocity(getNucleus(), vector3D(0, 0, 0));
 
-		system->setBodyPosition(getElectron("1s1"), vector3D(0, (1.0 / nucleusCharge), 0));
+		system->setBodyPosition(getElectron("1s1"), vector3D(0, (1.0 / (reducedMass * nucleusCharge)), 0));
 		system->setBodyVelocity(getElectron("1s1"), vector3D(0, 0, nucleusCharge));
 
 		this->setPosition(vector3D(0, 0, 0));
@@ -41,8 +44,8 @@ public:
 		double thetaN = distNull2Pi(randomGenerator);
 
 		double u = solveKeplerEquation(thetaN, epsilon, 0.5, 1e-10);
-		double a = nucleusCharge / (2.0 * 0.5 * pow(nucleusCharge, 2));
-		double b = sqrt(2.0 * 0.5 * pow(nucleusCharge, 2));
+		double a = nucleusCharge / (2.0 * 0.5 * reducedMass * pow(nucleusCharge, 2));
+		double b = sqrt(2.0 * 0.5 * reducedMass * reducedMass * pow(nucleusCharge, 2));
 
 		vector3D C00(0, a * sqrt(1 - epsilon * epsilon) * sin(u), a * (cos(u) - epsilon));
 		vector3D P00(0, b * sqrt(1 - epsilon * epsilon) * cos(u) / (1 - epsilon * cos(u)),
@@ -52,7 +55,7 @@ public:
 		vector3D P0 = P00.eulerRotation(phi, theta, eta);
 
 		system->setBodyPosition(getElectron("1s1"), system->getBodyPosition(nucleus) + C0);
-		system->setBodyVelocity(getElectron("1s1"), system->getBodyVelocity(nucleus) + P0);
+		system->setBodyVelocity(getElectron("1s1"), system->getBodyVelocity(nucleus) + P0 / reducedMass);
 	}
 
 	virtual void createInteractions() {
