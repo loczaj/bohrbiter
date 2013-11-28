@@ -3,20 +3,21 @@
 using namespace simulbody;
 using namespace std;
 
-Atom::Atom(System &system, Element element, unsigned int massNumber)
+Atom::Atom(System* system, Element element, unsigned int massNumber)
 		: Atom(system, element, massNumber, element) {
 }
 
-Atom::Atom(System &system, Element element, unsigned int massNumber, Element electronConfiguration)
-		: element(element), electronConfiguration(electronConfiguration), massNumber(massNumber) {
+Atom::Atom(System* system, Element element, unsigned int massNumber, Element electronConfiguration)
+		: system(system), element(element), electronConfiguration(electronConfiguration), massNumber(
+				massNumber) {
 
 	nucleusMass = 1836.1 * (double) massNumber;
 	nucleusCharge = (double) atomicNumber(element);
-	nucleus = system.createBody(nucleusMass);
+	nucleus = system->createBody(nucleusMass);
 
 	orbitNames = vector<string>(orbitals().at(electronConfiguration));
 	for (string orbitName : orbitNames) {
-		electrons[orbitName] = system.createBody(electronMass);
+		electrons[orbitName] = system->createBody(electronMass);
 	}
 }
 
@@ -45,72 +46,72 @@ identifier Atom::getElectron(string orbitName) const {
 	return electrons.at(orbitName);
 }
 
-vector3D Atom::getPosition(System &system) const {
-	return system.getGroupCenterOfMass(getBodies());
+vector3D Atom::getPosition() const {
+	return system->getGroupCenterOfMass(getBodies());
 }
 
-vector3D Atom::getImpulse(System &system) const {
-	return system.getGroupImpulse(getBodies());
+vector3D Atom::getImpulse() const {
+	return system->getGroupImpulse(getBodies());
 }
 
-vector3D Atom::getVelocity(System &system) const {
-	return getImpulse(system) / getMass(system);
+vector3D Atom::getVelocity() const {
+	return getImpulse() / getMass();
 }
 
-double Atom::getMass(System &system) const {
-	return system.getGroupMass(getBodies());
+double Atom::getMass() const {
+	return system->getGroupMass(getBodies());
 }
 
-void Atom::setPosition(System &system, vector3D position) {
-	vector3D delta = position - getPosition(system);
+void Atom::setPosition(vector3D position) {
+	vector3D delta = position - getPosition();
 	for (identifier body : getBodies()) {
-		system.setBodyPosition(body, system.getBodyPosition(body) + delta);
+		system->setBodyPosition(body, system->getBodyPosition(body) + delta);
 	}
 }
 
-void Atom::setVelocity(System &system, vector3D velocity) {
-	vector3D delta = velocity - getVelocity(system);
+void Atom::setVelocity(vector3D velocity) {
+	vector3D delta = velocity - getVelocity();
 	for (identifier body : getBodies()) {
-		system.setBodyVelocity(body, system.getBodyVelocity(body) + delta);
+		system->setBodyVelocity(body, system->getBodyVelocity(body) + delta);
 	}
 }
 
-double Atom::getEnergy(System &system) const {
+double Atom::getEnergy() const {
 	double energy = 0.0;
 
 	for (identifier e1 : getElectrons()) {
 		for (identifier e2 : getElectrons()) {
 			if (e1 < e2)
-				energy += system.getPairPotentialEnergy(e1, e2);
+				energy += system->getPairPotentialEnergy(e1, e2);
 		}
-		energy += system.getPairPotentialEnergy(e1, nucleus);
+		energy += system->getPairPotentialEnergy(e1, nucleus);
 	}
 
 	for (identifier body : getBodies()) {
-		energy += system.getBodyKineticEnergyReferenced(body, getVelocity(system));
+		energy += system->getBodyKineticEnergyReferenced(body, getVelocity());
 	}
 
 	return energy;
 }
 
-double Atom::getOrbitalEnergy(System &system, std::string orbit) const {
+double Atom::getOrbitalEnergy(std::string orbit) const {
 	double energy = 0.0;
 
 	identifier e1 = getElectron(orbit);
 	for (identifier e2 : getElectrons()) {
 		if (e1 != e2)
-			energy += system.getPairPotentialEnergy(e1, e2);
+			energy += system->getPairPotentialEnergy(e1, e2);
 	}
 
-	energy += system.getPairPotentialEnergy(e1, nucleus);
-	energy += system.getBodyKineticEnergyReferenced(e1, nucleus);
+	energy += system->getPairPotentialEnergy(e1, nucleus);
+	energy += system->getBodyKineticEnergyReferenced(e1, nucleus);
 
 	return energy;
 }
 
-vector3D Atom::getOrbitalAngularMomentum(System &system, std::string orbit) const {
+vector3D Atom::getOrbitalAngularMomentum(std::string orbit) const {
 	identifier electron = getElectron(orbit);
-	return system.getBodyAngularMomentum(electron, nucleus);
+	return system->getBodyAngularMomentum(electron, nucleus);
 }
 
 Atom::~Atom() {

@@ -11,24 +11,24 @@ using namespace simulbody;
 
 class AbrinesPercivalHydrogen: public Atom {
 public:
-	AbrinesPercivalHydrogen(System &system, Element nucleus = Element::H, int massNumber = 1)
+	AbrinesPercivalHydrogen(System* system, Element nucleus = Element::H, int massNumber = 1)
 			: Atom(system, nucleus, massNumber, Element::H) {
-		createInteractions(system);
-		install(system);
+		createInteractions();
+		install();
 	}
 
-	virtual void install(System &system) {
-		system.setBodyPosition(getNucleus(), vector3D(0, 0, 0));
-		system.setBodyVelocity(getNucleus(), vector3D(0, 0, 0));
+	virtual void install() {
+		system->setBodyPosition(getNucleus(), vector3D(0, 0, 0));
+		system->setBodyVelocity(getNucleus(), vector3D(0, 0, 0));
 
-		system.setBodyPosition(getElectron("1s1"), vector3D(0, 1, 0));
-		system.setBodyVelocity(getElectron("1s1"), vector3D(0, 0, 1));
+		system->setBodyPosition(getElectron("1s1"), vector3D(0, 1, 0));
+		system->setBodyVelocity(getElectron("1s1"), vector3D(0, 0, 1));
 
-		this->setPosition(system, vector3D(0, 0, 0));
-		this->setVelocity(system, vector3D(0, 0, 0));
+		this->setPosition(vector3D(0, 0, 0));
+		this->setVelocity(vector3D(0, 0, 0));
 	}
 
-	virtual void randomize(System &system, std::mt19937_64 &randomGenerator) {
+	virtual void randomize(std::mt19937_64 &randomGenerator) {
 		std::uniform_real_distribution<double> distMinusPiPi(-M_PI, M_PI);
 		std::uniform_real_distribution<double> distMinusOneOne(-1, 1);
 		std::uniform_real_distribution<double> distNull2Pi(0, 2 * M_PI);
@@ -51,14 +51,14 @@ public:
 		vector3D c0 = c00.eulerRotation(phi, theta, eta);
 		vector3D p0 = p00.eulerRotation(phi, theta, eta);
 
-		system.setBodyPosition(getElectron("1s1"), system.getBodyPosition(nucleus) + c0);
-		system.setBodyVelocity(getElectron("1s1"), system.getBodyVelocity(nucleus) + p0);
+		system->setBodyPosition(getElectron("1s1"), system->getBodyPosition(nucleus) + c0);
+		system->setBodyVelocity(getElectron("1s1"), system->getBodyVelocity(nucleus) + p0);
 	}
 
-	virtual void createInteractions(System &system) {
+	virtual void createInteractions() {
 		interactions.resize(1);
 		interactions[0] = new CoulombInteraction(-1.0 * nucleusCharge, getNucleus(), getElectron("1s1"));
-		system.addInteraction(interactions[0]);
+		system->addInteraction(interactions[0]);
 	}
 
 private:

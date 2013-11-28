@@ -11,6 +11,8 @@ using namespace simulbody;
 
 class Atom {
 protected:
+	System* system;
+
 	Element element;
 	Element electronConfiguration;
 	unsigned int massNumber;
@@ -25,8 +27,8 @@ protected:
 public:
 	std::vector<std::string> orbitNames;
 
-	Atom(System &system, Element element, unsigned int massNumber);
-	Atom(System &system, Element element, unsigned int massNumber, Element electronConfiguration);
+	Atom(System* system, Element element, unsigned int massNumber);
+	Atom(System* system, Element element, unsigned int massNumber, Element electronConfiguration);
 
 	identifier getNucleus() const;
 	std::vector<identifier> getElectrons() const;
@@ -34,21 +36,21 @@ public:
 	identifier getElectron(std::size_t orbit) const;
 	identifier getElectron(std::string orbitName) const;
 
-	vector3D getPosition(System &system) const;
-	vector3D getVelocity(System &system) const;
-	vector3D getImpulse(System &system) const;
-	double getMass(System &system) const;
+	vector3D getPosition() const;
+	vector3D getVelocity() const;
+	vector3D getImpulse() const;
+	double getMass() const;
 
-	void setPosition(System &system, vector3D position);
-	void setVelocity(System &system, vector3D velocity);
+	void setPosition(vector3D position);
+	void setVelocity(vector3D velocity);
 
-	virtual void install(System &system) = 0;
-	virtual void randomize(System &system, std::mt19937_64 &randomGenerator) = 0;
-	virtual void createInteractions(System &system) = 0;
+	virtual void install() = 0;
+	virtual void randomize(std::mt19937_64 &randomGenerator) = 0;
+	virtual void createInteractions() = 0;
 
-	virtual double getEnergy(System &system) const;
-	virtual double getOrbitalEnergy(System &system, std::string orbit) const;
-	virtual vector3D getOrbitalAngularMomentum(System &system, std::string orbit) const;
+	virtual double getEnergy() const;
+	virtual double getOrbitalEnergy(std::string orbit) const;
+	virtual vector3D getOrbitalAngularMomentum(std::string orbit) const;
 
 	virtual ~Atom();
 
