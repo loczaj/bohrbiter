@@ -11,7 +11,7 @@ Atom::Atom(System* system, Element element, unsigned int massNumber, Element ele
 		: system(system), element(element), electronConfiguration(electronConfiguration), massNumber(
 				massNumber) {
 
-	nucleusMass = 1836.1 * (double) massNumber;
+	nucleusMass = 1836.1527 * (double) massNumber;
 	nucleusCharge = (double) PeriodicTable::atomicNumber(element);
 	nucleus = system->createBody(nucleusMass);
 
