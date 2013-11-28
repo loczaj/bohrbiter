@@ -2,7 +2,7 @@
 #include <boost/numeric/odeint.hpp>
 #include <simulbody/simulator.hpp>
 
-#include "../ap-hydrogen.hpp"
+#include "../ap-h-atom.hpp"
 
 using namespace simulbody;
 using namespace std;
