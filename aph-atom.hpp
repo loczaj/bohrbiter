@@ -13,8 +13,12 @@ class AbrinesPercivalHydrogen: public Atom {
 	double reducedMass;
 
 public:
-	AbrinesPercivalHydrogen(System* system, Element nucleus = Element::H, int massNumber = 1)
-			: Atom(system, nucleus, massNumber, Element::H) {
+	AbrinesPercivalHydrogen(System* system)
+			: AbrinesPercivalHydrogen(system, Element::H, 1.00782503207) {
+	}
+
+	AbrinesPercivalHydrogen(System* system, Element nucleus, double atomicMass)
+			: Atom(system, nucleus, atomicMass, Element::H) {
 		reducedMass = (electronMass * nucleusMass) / (electronMass + nucleusMass);
 		createInteractions();
 		install();

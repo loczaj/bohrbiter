@@ -58,6 +58,10 @@ struct PeriodicTable {
 		orbitals[Element::Cl] = append(Mg, {"3p1", "3p2", "3p3", "3p4", "3p5"});
 		orbitals[Element::Ar] = append(Mg, {"3p1", "3p2", "3p3", "3p4", "3p5", "3p6"});
 	}
+
+	static double nucleusMassInAU(Element const element, double atomicMass) {
+		return atomicMass / 5.485799095 * 10000 - 1.0 * atomicNumber(element);
+	}
 };
 
 #endif /* ORBITALS_HPP */

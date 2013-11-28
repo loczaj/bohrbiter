@@ -15,7 +15,6 @@ protected:
 
 	Element element;
 	Element electronConfiguration;
-	unsigned int massNumber;
 
 	double nucleusMass;
 	double nucleusCharge;
@@ -27,8 +26,8 @@ protected:
 public:
 	std::vector<std::string> orbitNames;
 
-	Atom(System* system, Element element, unsigned int massNumber);
-	Atom(System* system, Element element, unsigned int massNumber, Element electronConfiguration);
+	Atom(System* system, Element element, double atomicMass);
+	Atom(System* system, Element element, double atomicMass, Element electronConfiguration);
 
 	identifier getNucleus() const;
 	std::vector<identifier> getElectrons() const;

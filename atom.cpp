@@ -3,15 +3,14 @@
 using namespace simulbody;
 using namespace std;
 
-Atom::Atom(System* system, Element element, unsigned int massNumber)
-		: Atom(system, element, massNumber, element) {
+Atom::Atom(System* system, Element element, double atomicMass)
+		: Atom(system, element, atomicMass, element) {
 }
 
-Atom::Atom(System* system, Element element, unsigned int massNumber, Element electronConfiguration)
-		: system(system), element(element), electronConfiguration(electronConfiguration), massNumber(
-				massNumber) {
+Atom::Atom(System* system, Element element, double atomicMass, Element electronConfiguration)
+		: system(system), element(element), electronConfiguration(electronConfiguration) {
 
-	nucleusMass = protonMass * (double) massNumber;
+	nucleusMass = PeriodicTable::nucleusMassInAU(element, atomicMass);
 	nucleusCharge = (double) PeriodicTable::atomicNumber(element);
 	nucleus = system->createBody(nucleusMass);
 
