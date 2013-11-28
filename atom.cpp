@@ -103,7 +103,7 @@ double Atom::getOrbitalEnergy(System &system, std::string orbit) const {
 	}
 
 	energy += system.getPairPotentialEnergy(e1, nucleus);
-	energy += system.getBodyKineticEnergyReferenced(e1, getVelocity(system));
+	energy += system.getBodyKineticEnergyReferenced(e1, nucleus);
 
 	return energy;
 }
