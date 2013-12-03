@@ -1,5 +1,5 @@
-exe collision-aph-proton
-    : atom.cpp experiments/collision-aph-proton.cpp ../simulbody//simulbody
+exe experiment
+    : atom.cpp experiment.cpp ../simulbody//simulbody
     : <include>../ <define>BOOST_ALL_NO_LIB=1
     : <cxxflags>-std=c++11
     ;
