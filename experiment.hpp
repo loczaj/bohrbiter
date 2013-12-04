@@ -1,6 +1,8 @@
 #ifndef EXPERIMENT_HPP
 #define EXPERIMENT_HPP
 
+#include <cmath>
+
 class Experiment {
 public:
 
@@ -23,6 +25,13 @@ public:
 	}
 
 	virtual ~Experiment() {
+	}
+};
+
+struct Utils {
+	static double calculateAcceleratedVelocityInAU(double massAU, double chargeAU, double voltageKV) {
+		double voltageAU = 1000 * voltageKV / 27.211383;
+		return sqrt(2 * chargeAU * voltageAU / massAU);
 	}
 };
 
