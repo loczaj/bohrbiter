@@ -11,9 +11,6 @@ class CollisionAbrinesPercivalHydrogenWithProton: public Experiment {
 	std::ofstream stream;
 	std::mt19937_64 randomGenerator;
 
-	runge_kutta4_classic<Phase> stepper;
-	Simulator<decltype(stepper)>* simulator;
-
 	System bbsystem;
 	DistanceCondition* condition;
 
@@ -41,7 +38,8 @@ public:
 		coulombProjectileNucleus = new CoulombInteraction(target->getNucleusCharge(), projectile,
 				target->getNucleus());
 
-		simulator = new Simulator<decltype(stepper)>(stepper, &bbsystem);
+		bbsystem.addInteraction(coulombProjectileElectron);
+		bbsystem.addInteraction(coulombProjectileNucleus);
 	}
 
 	int open(int rounds) {
@@ -53,6 +51,10 @@ public:
 	}
 
 	int run(int index) {
+		runge_kutta_dopri5<Phase> stepper;
+		auto ctrdStepper = make_controlled(1e-10, 1e-10, stepper);
+		Simulator<decltype(ctrdStepper)> simulator(ctrdStepper, &bbsystem);
+
 		double b = sqrt(distributionNullB2Max(randomGenerator));
 
 		target->randomize(randomGenerator);
@@ -65,10 +67,17 @@ public:
 		stream << bbsystem.phase;
 		stream.flush();
 
-		double time = simulator->simulate(0.0, 1.0, 0.001, *condition, 50);
+		double energy = bbsystem.getSystemEnergy();
+		double time = simulator.simulate(0.0, 1.0, 0.0001, *condition, 50);
+
 		if (time < 0.0) {
-			stream << " > Condition error" << std::endl;
+			stream << "Condition error" << std::endl;
 			return -1;
+		}
+
+		if (abs(energy - bbsystem.getSystemEnergy()) / energy > 1e-8) {
+			stream << "Energy error: " << energy << " vs. " << bbsystem.getSystemEnergy() << std::endl;
+			return -2;
 		}
 
 		bool eBoundToTarget = Utils::isBound(bbsystem, target->getElectron("1s1"), target->getNucleus());
