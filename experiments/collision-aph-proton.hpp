@@ -64,7 +64,8 @@ public:
 
 		stream << bbsystem.phase;
 		stream.flush();
-		double time = simulator->simulate(0.0, 1.0, 0.001, *condition, 10000);
+
+		double time = simulator->simulate(0.0, 1.0, 0.001, *condition, 50);
 		if (time < 0.0) {
 			stream << " > Condition error" << std::endl;
 			return -1;
