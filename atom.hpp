@@ -39,6 +39,7 @@ public:
 	vector3D getVelocity() const;
 	vector3D getImpulse() const;
 	double getMass() const;
+	double getNucleusCharge() const;
 
 	void setPosition(vector3D position);
 	void setVelocity(vector3D velocity);

@@ -61,6 +61,10 @@ double Atom::getMass() const {
 	return system->getGroupMass(getBodies());
 }
 
+double Atom::getNucleusCharge() const {
+	return nucleusCharge;
+}
+
 void Atom::setPosition(vector3D position) {
 	vector3D delta = position - getPosition();
 	for (identifier body : getBodies()) {
