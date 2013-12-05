@@ -47,7 +47,8 @@ public:
 		double epsilon = sqrt(distNullOne(randomGenerator));
 		double thetaN = distNull2Pi(randomGenerator);
 
-		double u = solveKeplerEquation(thetaN, epsilon, 0.5, 1e-10);
+		double u = solveKeplerEquation(thetaN, epsilon, 1e-10, randomGenerator);
+
 		double a = nucleusCharge / (2.0 * 0.5 * reducedMass * pow(nucleusCharge, 2));
 		double b = sqrt(2.0 * 0.5 * reducedMass * reducedMass * pow(nucleusCharge, 2));
 
@@ -69,14 +70,24 @@ public:
 	}
 
 private:
-	double solveKeplerEquation(double thetaN, double epsilon, double u0, double tolerance) {
+	double solveKeplerEquation(double thetaN, double epsilon, double tolerance,
+			std::mt19937_64 &randomGenerator) {
+
+		std::uniform_real_distribution<double> dist(0.1, 6.0);
+		double u0 = dist(randomGenerator);
 		double u = u0;
+		int rounds = 0;
+
 		do {
 			u0 = u;
 			u = u - (thetaN + epsilon * sin(u) - u) / (epsilon * cos(u) - 1);
-		} while (abs(u0 - u) > tolerance);
+			rounds++;
+		} while ((abs(u0 - u) > tolerance) && (rounds < 100));
 
-		return u;
+		if (rounds < 100)
+			return u;
+		else
+			return solveKeplerEquation(thetaN, epsilon, tolerance, randomGenerator);
 	}
 };
 
