@@ -10,15 +10,19 @@ public:
 	virtual int run(int index) = 0;
 	virtual int close() = 0;
 
-	static int carryOut(Experiment &experiment, int quantity) {
-		int result = experiment.open(quantity);
-		if (result != 0)
+	static int carryOut(Experiment &experiment, int rounds) {
+		int result = experiment.open(rounds);
+		if (result != 0) {
+			experiment.close();
 			return result;
+		}
 
-		for (int index = 0; index < quantity; index++) {
+		for (int index = 0; index < rounds; index++) {
 			int result = experiment.run(index);
-			if (result != 0)
+			if (result != 0) {
+				experiment.close();
 				return result;
+			}
 		}
 
 		return experiment.close();
