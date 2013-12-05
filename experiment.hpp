@@ -23,8 +23,9 @@ public:
 		}
 
 		int displayed = 0;
+		int index = 0;
 		int star = 1;
-		for (int index = 0; index < rounds; index++) {
+		for (index = 0; index < rounds; index++) {
 			while (displayed < 100 * (index + 1)) {
 				if (star % 10 == 0)
 					std::cout << star / 10;
@@ -39,17 +40,20 @@ public:
 			result = experiment.run(index);
 			if (result != 0) {
 				experiment.close();
-				std::cout << std::endl << "Failed to run experiment. (" << result << ")" << std::endl;
+				std::cout << std::endl << "Failed to run experiment." << std::endl;
+				std::cout << "Round: " << (index + 1) << " Error code: " << result << std::endl;
 				return result;
 			}
 		}
 
 		result = experiment.close();
 		if (result != 0) {
-			std::cout << std::endl << "Failed to close experiment. (" << result << ")" << std::endl;
+			std::cout << std::endl << index << " rounds passed." << std::endl;
+			std::cout << "Failed to close experiment. (" << result << ")" << std::endl;
 		}
 
-		std::cout << std::endl << "Experiment completed." << std::endl;
+		std::cout << std::endl << index << " rounds passed." << std::endl;
+		std::cout << "Experiment completed." << std::endl;
 		return result;
 	}
 
