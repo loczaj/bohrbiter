@@ -2,6 +2,9 @@
 #define EXPERIMENT_HPP
 
 #include <cmath>
+#include <simulbody/simulator.hpp>
+
+using namespace simulbody;
 
 class Experiment {
 public:
@@ -36,6 +39,12 @@ struct Utils {
 	static double calculateAcceleratedVelocityInAU(double massAU, double chargeAU, double voltageKV) {
 		double voltageAU = 1000 * voltageKV / 27.211383;
 		return sqrt(2 * chargeAU * voltageAU / massAU);
+	}
+
+	static double isBound(System system, identifier body, identifier reference) {
+		double energy = system.getBodyKineticEnergyReferenced(body, reference);
+		energy += system.getPairPotentialEnergy(body, reference);
+		return energy < 0.0;
 	}
 };
 
