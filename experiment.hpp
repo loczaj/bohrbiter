@@ -37,7 +37,7 @@ public:
 				star++;
 			}
 
-			result = experiment.run(index);
+			result = experiment.run(index + 1);
 			if (result != 0) {
 				experiment.close();
 				std::cout << std::endl << "Failed to run experiment." << std::endl;
