@@ -63,10 +63,10 @@ struct Utils {
 		return sqrt(2 * chargeAU * voltageAU / massAU);
 	}
 
-	static double isBound(System system, identifier body, identifier reference) {
+	static bool isBound(System system, identifier body, identifier reference) {
 		double energy = system.getBodyKineticEnergyReferenced(body, reference);
 		energy += system.getPairPotentialEnergy(body, reference);
-		return energy < 0.0;
+		return (energy < 0.0);
 	}
 };
 
