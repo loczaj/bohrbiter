@@ -61,6 +61,9 @@ public:
 
 		system->setBodyPosition(getElectron("1s1"), system->getBodyPosition(nucleus) + C0);
 		system->setBodyVelocity(getElectron("1s1"), system->getBodyVelocity(nucleus) + P0 / reducedMass);
+
+		system->setBodyPosition(getNucleus(), vector3D(0, 0, 0));
+		system->setBodyVelocity(getNucleus(), vector3D(0, 0, 0));
 	}
 
 	virtual void createInteractions() {
