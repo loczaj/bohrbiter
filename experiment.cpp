@@ -1,8 +1,8 @@
 #include "experiment.hpp"
-#include "experiments/sandbox.hpp"
+#include "experiments/collision-aph-proton.hpp"
 
 int main(int argc, char* argv[]) {
 
-	SandboxExperiment experiment;
-	return experiment.carryOut(experiment, 1);
+	CollisionAbrinesPercivalHydrogenWithProton experiment(0.5, 50);
+	return experiment.carryOut(experiment, 100);
 }
