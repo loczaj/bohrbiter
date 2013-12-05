@@ -27,7 +27,7 @@ public:
 		for (int index = 0; index < rounds; index++) {
 			while (displayed < 100 * (index + 1)) {
 				if (star % 10 == 0)
-					std::cout << ".";
+					std::cout << star / 10;
 				else
 					std::cout << "*";
 
