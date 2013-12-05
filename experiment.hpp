@@ -2,6 +2,7 @@
 #define EXPERIMENT_HPP
 
 #include <cmath>
+#include <iostream>
 #include <simulbody/simulator.hpp>
 
 using namespace simulbody;
@@ -17,18 +18,39 @@ public:
 		int result = experiment.open(rounds);
 		if (result != 0) {
 			experiment.close();
+			std::cout << "Failed to open experiment. (" << result << ")" << std::endl;
 			return result;
 		}
 
+		int displayed = 0;
+		int star = 1;
 		for (int index = 0; index < rounds; index++) {
-			int result = experiment.run(index);
+			while (displayed < 100 * (index + 1)) {
+				if (star % 10 == 0)
+					std::cout << ".";
+				else
+					std::cout << "*";
+
+				std::cout.flush();
+				displayed += rounds;
+				star++;
+			}
+
+			result = experiment.run(index);
 			if (result != 0) {
 				experiment.close();
+				std::cout << std::endl << "Failed to run experiment. (" << result << ")" << std::endl;
 				return result;
 			}
 		}
 
-		return experiment.close();
+		result = experiment.close();
+		if (result != 0) {
+			std::cout << std::endl << "Failed to close experiment. (" << result << ")" << std::endl;
+		}
+
+		std::cout << std::endl << "Experiment completed." << std::endl;
+		return result;
 	}
 
 	virtual ~Experiment() {
