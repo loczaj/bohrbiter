@@ -13,6 +13,8 @@ class CollisionAbrinesPercivalHydrogenWithProton: public Experiment {
 
 	System bbsystem;
 	DistanceCondition* condition;
+	Printer* printer;
+	PositionPrintField printField;
 
 	identifier projectile;
 	AbrinesPercivalHydrogen* target;
@@ -21,18 +23,17 @@ class CollisionAbrinesPercivalHydrogenWithProton: public Experiment {
 
 	double b2max;
 	double projectileVelocity;
-	std::uniform_real_distribution<double> distributionNullB2Max;
 
 public:
 
 	CollisionAbrinesPercivalHydrogenWithProton(double impact2max, double voltagekV) {
 		b2max = impact2max;
 		projectileVelocity = Utils::calculateAcceleratedVelocityInAU(Atom::protonMass, 1.0, voltagekV);
-		distributionNullB2Max = std::uniform_real_distribution<double>(0, b2max);
 
 		projectile = bbsystem.createBody(Atom::protonMass);
 		target = new AbrinesPercivalHydrogen(&bbsystem, Element::H, 1.00782503207);
 		condition = new DistanceCondition(projectile, target->getNucleus(), 35.0);
+		printer = nullptr;
 
 		coulombProjectileElectron = new CoulombInteraction(-1.0, projectile, target->getElectron("1s1"));
 		coulombProjectileNucleus = new CoulombInteraction(target->getNucleusCharge(), projectile,
@@ -55,6 +56,7 @@ public:
 		auto ctrdStepper = make_controlled(1e-10, 1e-10, stepper);
 		Simulator<decltype(ctrdStepper)> simulator(ctrdStepper, &bbsystem);
 
+		std::uniform_real_distribution<double> distributionNullB2Max(0, b2max);
 		double b = sqrt(distributionNullB2Max(randomGenerator));
 
 		target->randomize(randomGenerator);
@@ -66,6 +68,12 @@ public:
 
 		stream << bbsystem.phase;
 		stream.flush();
+
+		if (tracking) {
+			printer = new Printer(std::to_string(index) + ".csv");
+			printer->addField(&printField);
+			simulator.setPrinter(*printer);
+		}
 
 		double energy = bbsystem.getSystemEnergy();
 		double time = simulator.simulate(0.0, 1.0, 0.0001, *condition, 50);
@@ -94,6 +102,9 @@ public:
 
 		if (!eBoundToTarget && !eBoundToProjec)
 			stream << "\t > Ionization" << std::endl;
+
+		if (printer != nullptr)
+			delete printer;
 
 		stream.flush();
 		return 0;
