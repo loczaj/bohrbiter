@@ -11,10 +11,10 @@ class Experiment {
 public:
 
 	virtual int open(int quantity) = 0;
-	virtual int run(int index) = 0;
+	virtual int run(int index, bool tracking) = 0;
 	virtual int close() = 0;
 
-	static int carryOut(Experiment &experiment, int rounds) {
+	static int carryOut(Experiment &experiment, int rounds, std::initializer_list<int> roundsToTrack = { }) {
 		int result = experiment.open(rounds);
 		if (result != 0) {
 			experiment.close();
@@ -37,7 +37,11 @@ public:
 				star++;
 			}
 
-			result = experiment.run(index + 1);
+			bool tracking = true;
+			if (std::find(roundsToTrack.begin(), roundsToTrack.end(), (index + 1)) == roundsToTrack.end())
+				tracking = false;
+
+			result = experiment.run(index + 1, tracking);
 			if (result != 0) {
 				experiment.close();
 				std::cout << std::endl << "Failed to run experiment." << std::endl;

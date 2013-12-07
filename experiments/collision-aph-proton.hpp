@@ -50,7 +50,7 @@ public:
 		return 0;
 	}
 
-	int run(int index) {
+	int run(int index, bool tracking) {
 		runge_kutta_dopri5<Phase> stepper;
 		auto ctrdStepper = make_controlled(1e-10, 1e-10, stepper);
 		Simulator<decltype(ctrdStepper)> simulator(ctrdStepper, &bbsystem);
