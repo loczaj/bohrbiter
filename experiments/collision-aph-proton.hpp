@@ -24,6 +24,14 @@ class CollisionAbrinesPercivalHydrogenWithProton: public Experiment {
 	double b2max;
 	double projectileVelocity;
 
+	int rounds = 0;
+	int ionization = 0;
+	int etransfer = 0;
+	int undecided = 0;
+
+	double ionizationCrossSection = 0.0;
+	double etransferCrossSection = 0.0;
+
 public:
 
 	CollisionAbrinesPercivalHydrogenWithProton(double impact2max, double voltagekV) {
@@ -44,6 +52,8 @@ public:
 	}
 
 	int open(int rounds) {
+		this->rounds = rounds;
+
 		stream.open("result.csv");
 		stream.precision(10);
 
@@ -51,7 +61,7 @@ public:
 		return 0;
 	}
 
-	int run(int index, bool tracking) {
+	int run(int round, bool tracking) {
 		runge_kutta_dopri5<Phase> stepper;
 		auto ctrdStepper = make_controlled(1e-10, 1e-10, stepper);
 		Simulator<decltype(ctrdStepper)> simulator(ctrdStepper, &bbsystem);
@@ -70,7 +80,7 @@ public:
 		stream.flush();
 
 		if (tracking) {
-			printer = new Printer(std::to_string(index) + ".csv");
+			printer = new Printer(std::to_string(round) + ".csv");
 			printer->addField(&printField);
 			simulator.setPrinter(*printer);
 		}
@@ -91,17 +101,26 @@ public:
 		bool eBoundToTarget = Utils::isBound(bbsystem, target->getElectron("1s1"), target->getNucleus());
 		bool eBoundToProjec = Utils::isBound(bbsystem, target->getElectron("1s1"), projectile);
 
-		if (eBoundToTarget && eBoundToProjec)
-			stream << "\t > Molecule" << std::endl;
+		if (eBoundToTarget && eBoundToProjec) {
+			stream << "\t" << round << " --> Molecule" << std::endl;
+			undecided++;
+		}
 
-		if (eBoundToTarget && !eBoundToProjec)
+		if (eBoundToTarget && !eBoundToProjec) {
 			stream << std::endl;
+		}
 
-		if (!eBoundToTarget && eBoundToProjec)
-			stream << "\t > Transfer" << std::endl;
+		if (!eBoundToTarget && eBoundToProjec) {
+			stream << "\t" << round << " --> Transfer" << std::endl;
+			etransferCrossSection += b;
+			etransfer++;
+		}
 
-		if (!eBoundToTarget && !eBoundToProjec)
-			stream << "\t > Ionization" << std::endl;
+		if (!eBoundToTarget && !eBoundToProjec) {
+			stream << "\t" << round << " --> Ionization" << std::endl;
+			ionizationCrossSection += b;
+			ionization++;
+		}
 
 		if (printer != nullptr)
 			delete printer;
@@ -111,6 +130,22 @@ public:
 	}
 
 	int close() {
+		double ionizationPercentage = ((double) ionization) / ((double) rounds) * 100.0;
+		double etransferPercentage = ((double) etransfer) / ((double) rounds) * 100.0;
+		double undecidedPercentage = ((double) undecided) / ((double) rounds) * 100.0;
+		cout << "Ionization: " << ionization << " (" << ionizationPercentage << " %)" << endl;
+		cout << "E.Transfer: " << etransfer << " (" << etransferPercentage << " %)" << endl;
+		cout << "Undecided:  " << undecided << " (" << undecidedPercentage << " %)" << endl << endl;
+		cout << "Cross sections:" << endl;
+
+		ionizationCrossSection *= 2 * M_PI * sqrt(b2max);
+		ionizationCrossSection /= ((double) rounds);
+		cout << "\t Ionization: " << ionizationCrossSection << endl;
+
+		etransferCrossSection *= 2 * M_PI * sqrt(b2max);
+		etransferCrossSection /= ((double) rounds);
+		cout << "\t E.Transfer: " << etransferCrossSection << endl << endl;
+
 		stream.close();
 		return 0;
 	}
