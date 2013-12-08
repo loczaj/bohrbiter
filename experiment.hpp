@@ -50,13 +50,16 @@ public:
 			}
 		}
 
+		std::cout << std::endl;
+
 		result = experiment.close();
 		if (result != 0) {
-			std::cout << std::endl << index << " rounds passed." << std::endl;
+			std::cout << index << " rounds passed." << std::endl;
 			std::cout << "Failed to close experiment. (" << result << ")" << std::endl;
+			return result;
 		}
 
-		std::cout << std::endl << index << " rounds passed." << std::endl;
+		std::cout << index << " rounds passed." << std::endl;
 		std::cout << "Experiment completed." << std::endl;
 		return result;
 	}
