@@ -11,7 +11,7 @@ class SandboxExperiment: public Experiment {
 		return 0;
 	}
 
-	int run(int index, bool tracking) {
+	int run(int index, bool tracking, bool skipUntracked) {
 		simulbody::System bbsystem;
 		AbrinesPercivalHydrogen hydrogen(&bbsystem, Element::H, 1.00782503207);
 

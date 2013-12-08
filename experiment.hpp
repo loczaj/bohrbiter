@@ -11,10 +11,16 @@ class Experiment {
 public:
 
 	virtual int open(int quantity) = 0;
-	virtual int run(int index, bool tracking) = 0;
+	virtual int run(int index, bool tracking, bool skipUntracked) = 0;
 	virtual int close() = 0;
 
-	static int carryOut(Experiment &experiment, int rounds, std::initializer_list<int> roundsToTrack = { }) {
+	static int track(Experiment &experiment, std::initializer_list<int> roundsToTrack) {
+		int rounds = *std::max_element(roundsToTrack.begin(), roundsToTrack.end());
+		return carryOut(experiment, rounds, roundsToTrack, true);
+	}
+
+	static int carryOut(Experiment &experiment, int rounds, std::initializer_list<int> roundsToTrack = { },
+			bool skipUntracked = false) {
 		int result = experiment.open(rounds);
 		if (result != 0) {
 			experiment.close();
@@ -41,7 +47,7 @@ public:
 			if (std::find(roundsToTrack.begin(), roundsToTrack.end(), (index + 1)) == roundsToTrack.end())
 				tracking = false;
 
-			result = experiment.run(index + 1, tracking);
+			result = experiment.run(index + 1, tracking, skipUntracked);
 			if (result != 0) {
 				experiment.close();
 				std::cout << std::endl << "Failed to run experiment." << std::endl;

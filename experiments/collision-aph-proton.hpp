@@ -61,7 +61,7 @@ public:
 		return 0;
 	}
 
-	int run(int round, bool tracking) {
+	int run(int round, bool tracking, bool skipUntracked) {
 		runge_kutta_dopri5<Phase> stepper;
 		auto ctrdStepper = make_controlled(1e-10, 1e-10, stepper);
 		Simulator<decltype(ctrdStepper)> simulator(ctrdStepper, &bbsystem);
@@ -75,6 +75,10 @@ public:
 
 		bbsystem.setBodyPosition(projectile, vector3D(0, b, -20));
 		bbsystem.setBodyVelocity(projectile, vector3D(0, 0, projectileVelocity));
+
+		if (skipUntracked && !tracking) {
+			return 0;
+		}
 
 		stream << bbsystem.phase;
 		stream.flush();
