@@ -3,7 +3,7 @@
 #include <boost/numeric/odeint.hpp>
 #include <simulbody/simulator.hpp>
 
-#include "../aph-atom.hpp"
+#include "../ap-hydrogen.hpp"
 #include "../experiment.hpp"
 
 class CollisionAbrinesPercivalHydrogenWithProton: public Experiment {

@@ -2,7 +2,6 @@
 #include <boost/numeric/odeint.hpp>
 #include <simulbody/simulator.hpp>
 
-#include "../aph-atom.hpp"
 #include "../experiment.hpp"
 
 class SandboxExperiment: public Experiment {
