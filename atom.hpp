@@ -45,7 +45,7 @@ public:
 	void setVelocity(vector3D velocity);
 
 	virtual void install() = 0;
-	virtual void randomize(std::mt19937_64 &randomGenerator) = 0;
+	virtual void randomize(std::mt19937_64 &randomEngine) = 0;
 	virtual void createInteractions() = 0;
 
 	virtual double getEnergy() const;

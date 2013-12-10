@@ -9,7 +9,7 @@
 class CollisionAbrinesPercivalHydrogenWithProton: public Experiment {
 
 	std::ofstream stream;
-	std::mt19937_64 randomGenerator;
+	std::mt19937_64 randomEngine;
 
 	System bbsystem;
 	DistanceCondition* condition;
@@ -56,11 +56,17 @@ public:
 		bbsystem.addInteraction(coulombProjectileNucleus);
 	}
 
-	int open(int numberOfRounds) {
+	int open(int numberOfRounds, bool seedRandom) {
 		stream.open("result.csv");
 		stream.precision(10);
 
-		randomGenerator.seed(std::mt19937_64::default_seed);
+		if (seedRandom) {
+			std::random_device rdev { };
+			randomEngine.seed(rdev());
+		} else {
+			randomEngine.seed(std::mt19937_64::default_seed);
+		}
+
 		return 0;
 	}
 
@@ -70,9 +76,9 @@ public:
 		Simulator<decltype(ctrdStepper)> simulator(ctrdStepper, &bbsystem);
 
 		std::uniform_real_distribution<double> distributionNullB2Max(0, b2max);
-		double b = sqrt(distributionNullB2Max(randomGenerator));
+		double b = sqrt(distributionNullB2Max(randomEngine));
 
-		target->randomize(randomGenerator);
+		target->randomize(randomEngine);
 		target->setPosition(vector3D(0, 0, 0));
 		target->setVelocity(vector3D(0, 0, 0));
 
@@ -151,7 +157,7 @@ public:
 
 		ecaptureCrossSection *= 2 * M_PI * sqrt(b2max);
 		ecaptureCrossSection /= ((double) successfulRounds);
-		cout << "\t E.Capture: " << ecaptureCrossSection << endl << endl;
+		cout << "\t El.Capture: " << ecaptureCrossSection << endl << endl;
 
 		stream.close();
 		return 0;

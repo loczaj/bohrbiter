@@ -10,18 +10,19 @@ using namespace simulbody;
 class Experiment {
 public:
 
-	virtual int open(int numberOfRounds) = 0;
+	virtual int open(int numberOfRounds, bool seedRandom) = 0;
 	virtual int run(int round, bool tracking, bool skipUntracked) = 0;
 	virtual int close(int successfulRounds) = 0;
 
 	static int track(Experiment &experiment, std::initializer_list<int> roundsToTrack) {
 		int rounds = *std::max_element(roundsToTrack.begin(), roundsToTrack.end());
-		return carryOut(experiment, rounds, roundsToTrack, true);
+		return carryOut(experiment, rounds, false, roundsToTrack, true);
 	}
 
-	static int carryOut(Experiment &experiment, int numberOfRounds, std::initializer_list<int> roundsToTrack =
-			{ }, bool skipUntracked = false) {
-		int result = experiment.open(numberOfRounds);
+	static int carryOut(Experiment &experiment, int numberOfRounds, bool seedRandom = false,
+			std::initializer_list<int> roundsToTrack = { }, bool skipUntracked = false) {
+
+		int result = experiment.open(numberOfRounds, seedRandom);
 		if (result != 0) {
 			experiment.close(0);
 			std::cout << "Failed to open experiment. (" << result << ")" << std::endl;

@@ -35,19 +35,19 @@ public:
 		this->setVelocity(vector3D(0, 0, 0));
 	}
 
-	virtual void randomize(std::mt19937_64 &randomGenerator) {
+	virtual void randomize(std::mt19937_64 &randomEngine) {
 		std::uniform_real_distribution<double> distMinusPiPi(-M_PI, M_PI);
 		std::uniform_real_distribution<double> distMinusOneOne(-1, 1);
 		std::uniform_real_distribution<double> distNull2Pi(0, 2 * M_PI);
 		std::uniform_real_distribution<double> distNullOne(0, 1);
 
-		double phi = distMinusPiPi(randomGenerator);
-		double eta = distMinusPiPi(randomGenerator);
-		double theta = acos(distMinusOneOne(randomGenerator));
-		double epsilon = sqrt(distNullOne(randomGenerator));
-		double thetaN = distNull2Pi(randomGenerator);
+		double phi = distMinusPiPi(randomEngine);
+		double eta = distMinusPiPi(randomEngine);
+		double theta = acos(distMinusOneOne(randomEngine));
+		double epsilon = sqrt(distNullOne(randomEngine));
+		double thetaN = distNull2Pi(randomEngine);
 
-		double u = solveKeplerEquation(thetaN, epsilon, 1e-10, randomGenerator);
+		double u = solveKeplerEquation(thetaN, epsilon, 1e-10, randomEngine);
 
 		double a = nucleusCharge / (2.0 * 0.5 * reducedMass * pow(nucleusCharge, 2));
 		double b = sqrt(2.0 * 0.5 * reducedMass * reducedMass * pow(nucleusCharge, 2));
@@ -71,10 +71,10 @@ public:
 
 private:
 	double solveKeplerEquation(double thetaN, double epsilon, double tolerance,
-			std::mt19937_64 &randomGenerator) {
+			std::mt19937_64 &randomEngine) {
 
 		std::uniform_real_distribution<double> dist(0.1, 6.0);
-		double u0 = dist(randomGenerator);
+		double u0 = dist(randomEngine);
 		double u = u0;
 		int rounds = 0;
 
@@ -85,7 +85,7 @@ private:
 		} while ((abs(u0 - u) > tolerance) && (rounds < 100));
 
 		if (abs(u0 - u) > tolerance)
-			return solveKeplerEquation(thetaN, epsilon, tolerance, randomGenerator);
+			return solveKeplerEquation(thetaN, epsilon, tolerance, randomEngine);
 		else
 			return u;
 	}

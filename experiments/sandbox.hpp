@@ -6,7 +6,7 @@
 
 class SandboxExperiment: public Experiment {
 
-	int open(int numberOfRounds) {
+	int open(int numberOfRounds, bool seedRandom) {
 		return 0;
 	}
 
@@ -14,8 +14,8 @@ class SandboxExperiment: public Experiment {
 		simulbody::System bbsystem;
 		AbrinesPercivalHydrogen hydrogen(&bbsystem, Element::H, 1.00782503207);
 
-		std::mt19937_64 randomGenerator;
-		randomGenerator.seed(std::mt19937_64::default_seed);
+		std::mt19937_64 randomEngine;
+		randomEngine.seed(std::mt19937_64::default_seed);
 
 		cout.precision(10);
 		cout << hydrogen.getNucleus() << endl;
@@ -31,7 +31,7 @@ class SandboxExperiment: public Experiment {
 		cout << hydrogen.getOrbitalEnergy("1s1") << "\t" << hydrogen.getEnergy() << endl;
 
 		for (int i = 0; i < 10; i++) {
-			hydrogen.randomize(randomGenerator);
+			hydrogen.randomize(randomEngine);
 			cout << hydrogen.getOrbitalEnergy("1s1") << "\t" << hydrogen.getEnergy() << endl;
 		}
 
