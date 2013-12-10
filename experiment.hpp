@@ -10,28 +10,30 @@ using namespace simulbody;
 class Experiment {
 public:
 
-	virtual int open(int quantity) = 0;
+	virtual int open(int numberOfRounds) = 0;
 	virtual int run(int round, bool tracking, bool skipUntracked) = 0;
-	virtual int close() = 0;
+	virtual int close(int successfulRounds) = 0;
 
 	static int track(Experiment &experiment, std::initializer_list<int> roundsToTrack) {
 		int rounds = *std::max_element(roundsToTrack.begin(), roundsToTrack.end());
 		return carryOut(experiment, rounds, roundsToTrack, true);
 	}
 
-	static int carryOut(Experiment &experiment, int rounds, std::initializer_list<int> roundsToTrack = { },
-			bool skipUntracked = false) {
-		int result = experiment.open(rounds);
+	static int carryOut(Experiment &experiment, int numberOfRounds, std::initializer_list<int> roundsToTrack =
+			{ }, bool skipUntracked = false) {
+		int result = experiment.open(numberOfRounds);
 		if (result != 0) {
-			experiment.close();
+			experiment.close(0);
 			std::cout << "Failed to open experiment. (" << result << ")" << std::endl;
 			return result;
 		}
 
-		int displayed = 0;
 		int round = 0;
+		int successfulRounds = 0;
+		int displayed = 0;
 		int star = 1;
-		for (round = 0; round < rounds; round++) {
+
+		for (round = 0; round < numberOfRounds; round++) {
 			while (displayed < 100 * (round + 1)) {
 				if (star % 10 == 0)
 					std::cout << star / 10;
@@ -39,7 +41,7 @@ public:
 					std::cout << "*";
 
 				std::cout.flush();
-				displayed += rounds;
+				displayed += numberOfRounds;
 				star++;
 			}
 
@@ -49,24 +51,25 @@ public:
 
 			result = experiment.run(round + 1, tracking, skipUntracked);
 			if (result != 0) {
-				experiment.close();
-				std::cout << std::endl << "Failed to run experiment." << std::endl;
-				std::cout << "Round: " << (round + 1) << " Error code: " << result << std::endl;
-				return result;
+				std::cout << std::endl << "Round " << (round + 1) << " failed with: " << result << " ";
+			} else {
+				successfulRounds++;
 			}
 		}
 
 		std::cout << std::endl;
+		result = experiment.close(successfulRounds);
 
-		result = experiment.close();
-		if (result != 0) {
-			std::cout << round << " rounds passed." << std::endl;
+		std::cout << successfulRounds << " rounds passed." << std::endl;
+
+		if (numberOfRounds != successfulRounds)
+			std::cout << numberOfRounds - successfulRounds << " rounds failed." << std::endl;
+
+		if (result != 0)
 			std::cout << "Failed to close experiment. (" << result << ")" << std::endl;
-			return result;
-		}
+		else
+			std::cout << "Experiment completed." << std::endl;
 
-		std::cout << round << " rounds passed." << std::endl;
-		std::cout << "Experiment completed." << std::endl;
 		return result;
 	}
 

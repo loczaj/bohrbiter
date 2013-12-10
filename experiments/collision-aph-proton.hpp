@@ -24,7 +24,6 @@ class CollisionAbrinesPercivalHydrogenWithProton: public Experiment {
 	double b2max;
 	double projectileVelocity;
 
-	int rounds = 0;
 	int ionization = 0;
 	int ecapture = 0;
 	int undecided = 0;
@@ -51,9 +50,7 @@ public:
 		bbsystem.addInteraction(coulombProjectileNucleus);
 	}
 
-	int open(int rounds) {
-		this->rounds = rounds;
-
+	int open(int numberOfRounds) {
 		stream.open("result.csv");
 		stream.precision(10);
 
@@ -93,7 +90,7 @@ public:
 		double time = simulator.simulate(0.0, 1.0, 0.0001, *condition, 50);
 
 		if (time < 0.0) {
-			stream << "Condition error" << std::endl;
+			stream << "Distance error" << std::endl;
 			return -1;
 		}
 
@@ -133,21 +130,21 @@ public:
 		return 0;
 	}
 
-	int close() {
-		double ionizationPercentage = ((double) ionization) / ((double) rounds) * 100.0;
-		double ecapturePercentage = ((double) ecapture) / ((double) rounds) * 100.0;
-		double undecidedPercentage = ((double) undecided) / ((double) rounds) * 100.0;
+	int close(int successfulRounds) {
+		double ionizationPercentage = ((double) ionization) / ((double) successfulRounds) * 100.0;
+		double ecapturePercentage = ((double) ecapture) / ((double) successfulRounds) * 100.0;
+		double undecidedPercentage = ((double) undecided) / ((double) successfulRounds) * 100.0;
 		cout << "Ionization: " << ionization << " (" << ionizationPercentage << " %)" << endl;
 		cout << "El.Capture: " << ecapture << " (" << ecapturePercentage << " %)" << endl;
 		cout << "Undecided:  " << undecided << " (" << undecidedPercentage << " %)" << endl << endl;
 		cout << "Cross sections:" << endl;
 
 		ionizationCrossSection *= 2 * M_PI * sqrt(b2max);
-		ionizationCrossSection /= ((double) rounds);
+		ionizationCrossSection /= ((double) successfulRounds);
 		cout << "\t Ionization: " << ionizationCrossSection << endl;
 
 		ecaptureCrossSection *= 2 * M_PI * sqrt(b2max);
-		ecaptureCrossSection /= ((double) rounds);
+		ecaptureCrossSection /= ((double) successfulRounds);
 		cout << "\t E.Capture: " << ecaptureCrossSection << endl << endl;
 
 		stream.close();

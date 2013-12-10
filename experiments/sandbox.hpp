@@ -6,11 +6,11 @@
 
 class SandboxExperiment: public Experiment {
 
-	int open(int quantity) {
+	int open(int numberOfRounds) {
 		return 0;
 	}
 
-	int run(int index, bool tracking, bool skipUntracked) {
+	int run(int round, bool tracking, bool skipUntracked) {
 		simulbody::System bbsystem;
 		AbrinesPercivalHydrogen hydrogen(&bbsystem, Element::H, 1.00782503207);
 
@@ -38,7 +38,7 @@ class SandboxExperiment: public Experiment {
 		return 0;
 	}
 
-	int close() {
+	int close(int successfulRounds) {
 		return 0;
 	}
 };
