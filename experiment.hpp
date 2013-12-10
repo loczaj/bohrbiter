@@ -11,7 +11,7 @@ class Experiment {
 public:
 
 	virtual int open(int quantity) = 0;
-	virtual int run(int index, bool tracking, bool skipUntracked) = 0;
+	virtual int run(int round, bool tracking, bool skipUntracked) = 0;
 	virtual int close() = 0;
 
 	static int track(Experiment &experiment, std::initializer_list<int> roundsToTrack) {
@@ -29,10 +29,10 @@ public:
 		}
 
 		int displayed = 0;
-		int index = 0;
+		int round = 0;
 		int star = 1;
-		for (index = 0; index < rounds; index++) {
-			while (displayed < 100 * (index + 1)) {
+		for (round = 0; round < rounds; round++) {
+			while (displayed < 100 * (round + 1)) {
 				if (star % 10 == 0)
 					std::cout << star / 10;
 				else
@@ -44,14 +44,14 @@ public:
 			}
 
 			bool tracking = true;
-			if (std::find(roundsToTrack.begin(), roundsToTrack.end(), (index + 1)) == roundsToTrack.end())
+			if (std::find(roundsToTrack.begin(), roundsToTrack.end(), (round + 1)) == roundsToTrack.end())
 				tracking = false;
 
-			result = experiment.run(index + 1, tracking, skipUntracked);
+			result = experiment.run(round + 1, tracking, skipUntracked);
 			if (result != 0) {
 				experiment.close();
 				std::cout << std::endl << "Failed to run experiment." << std::endl;
-				std::cout << "Round: " << (index + 1) << " Error code: " << result << std::endl;
+				std::cout << "Round: " << (round + 1) << " Error code: " << result << std::endl;
 				return result;
 			}
 		}
@@ -60,12 +60,12 @@ public:
 
 		result = experiment.close();
 		if (result != 0) {
-			std::cout << index << " rounds passed." << std::endl;
+			std::cout << round << " rounds passed." << std::endl;
 			std::cout << "Failed to close experiment. (" << result << ")" << std::endl;
 			return result;
 		}
 
-		std::cout << index << " rounds passed." << std::endl;
+		std::cout << round << " rounds passed." << std::endl;
 		std::cout << "Experiment completed." << std::endl;
 		return result;
 	}

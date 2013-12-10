@@ -26,11 +26,11 @@ class CollisionAbrinesPercivalHydrogenWithProton: public Experiment {
 
 	int rounds = 0;
 	int ionization = 0;
-	int etransfer = 0;
+	int ecapture = 0;
 	int undecided = 0;
 
 	double ionizationCrossSection = 0.0;
-	double etransferCrossSection = 0.0;
+	double ecaptureCrossSection = 0.0;
 
 public:
 
@@ -115,9 +115,9 @@ public:
 		}
 
 		if (!eBoundToTarget && eBoundToProjec) {
-			stream << "\t" << round << " --> Transfer" << std::endl;
-			etransferCrossSection += b;
-			etransfer++;
+			stream << "\t" << round << " --> Electron Capture" << std::endl;
+			ecaptureCrossSection += b;
+			ecapture++;
 		}
 
 		if (!eBoundToTarget && !eBoundToProjec) {
@@ -135,10 +135,10 @@ public:
 
 	int close() {
 		double ionizationPercentage = ((double) ionization) / ((double) rounds) * 100.0;
-		double etransferPercentage = ((double) etransfer) / ((double) rounds) * 100.0;
+		double ecapturePercentage = ((double) ecapture) / ((double) rounds) * 100.0;
 		double undecidedPercentage = ((double) undecided) / ((double) rounds) * 100.0;
 		cout << "Ionization: " << ionization << " (" << ionizationPercentage << " %)" << endl;
-		cout << "E.Transfer: " << etransfer << " (" << etransferPercentage << " %)" << endl;
+		cout << "El.Capture: " << ecapture << " (" << ecapturePercentage << " %)" << endl;
 		cout << "Undecided:  " << undecided << " (" << undecidedPercentage << " %)" << endl << endl;
 		cout << "Cross sections:" << endl;
 
@@ -146,9 +146,9 @@ public:
 		ionizationCrossSection /= ((double) rounds);
 		cout << "\t Ionization: " << ionizationCrossSection << endl;
 
-		etransferCrossSection *= 2 * M_PI * sqrt(b2max);
-		etransferCrossSection /= ((double) rounds);
-		cout << "\t E.Transfer: " << etransferCrossSection << endl << endl;
+		ecaptureCrossSection *= 2 * M_PI * sqrt(b2max);
+		ecaptureCrossSection /= ((double) rounds);
+		cout << "\t E.Capture: " << ecaptureCrossSection << endl << endl;
 
 		stream.close();
 		return 0;
