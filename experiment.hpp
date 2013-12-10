@@ -3,12 +3,17 @@
 
 #include <cmath>
 #include <iostream>
+#include <random>
 #include <simulbody/simulator.hpp>
 
 using namespace simulbody;
 using namespace std;
 
 class Experiment {
+protected:
+
+	mt19937_64 randomEngine;
+
 public:
 
 	virtual int open(int numberOfRounds, bool seedRandom) = 0;
@@ -22,6 +27,13 @@ public:
 
 	static int carryOut(Experiment &experiment, int numberOfRounds, bool seedRandom = false,
 			initializer_list<int> roundsToTrack = { }, bool skipUntracked = false) {
+
+		if (seedRandom) {
+			random_device rdev { };
+			experiment.randomEngine.seed(rdev());
+		} else {
+			experiment.randomEngine.seed(mt19937_64::default_seed);
+		}
 
 		int result = experiment.open(numberOfRounds, seedRandom);
 		if (result != 0) {

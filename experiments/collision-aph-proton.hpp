@@ -1,5 +1,4 @@
 #include <fstream>
-#include <random>
 #include <boost/numeric/odeint.hpp>
 #include <simulbody/simulator.hpp>
 
@@ -11,15 +10,14 @@ using namespace std;
 class CollisionAbrinesPercivalHydrogenWithProton: public Experiment {
 
 	ofstream stream;
-	mt19937_64 randomEngine;
 
 	System bbsystem;
-	DistanceCondition* condition;
 	Printer* printer;
 	PositionPrintField printField;
 
 	identifier projectile;
 	AbrinesPercivalHydrogen* target;
+	DistanceCondition* condition;
 	Interaction* coulombProjectileElectron;
 	Interaction* coulombProjectileNucleus;
 
@@ -58,13 +56,6 @@ public:
 	int open(int numberOfRounds, bool seedRandom) {
 		stream.open("result.csv");
 		stream.precision(10);
-
-		if (seedRandom) {
-			random_device rdev { };
-			randomEngine.seed(rdev());
-		} else {
-			randomEngine.seed(mt19937_64::default_seed);
-		}
 
 		return 0;
 	}
