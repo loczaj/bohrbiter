@@ -6,10 +6,12 @@
 #include "../ap-hydrogen.hpp"
 #include "../experiment.hpp"
 
+using namespace std;
+
 class CollisionAbrinesPercivalHydrogenWithProton: public Experiment {
 
-	std::ofstream stream;
-	std::mt19937_64 randomEngine;
+	ofstream stream;
+	mt19937_64 randomEngine;
 
 	System bbsystem;
 	DistanceCondition* condition;
@@ -58,10 +60,10 @@ public:
 		stream.precision(10);
 
 		if (seedRandom) {
-			std::random_device rdev { };
+			random_device rdev { };
 			randomEngine.seed(rdev());
 		} else {
-			randomEngine.seed(std::mt19937_64::default_seed);
+			randomEngine.seed(mt19937_64::default_seed);
 		}
 
 		return 0;
@@ -72,7 +74,7 @@ public:
 		auto ctrdStepper = make_controlled(absoluteStepperError, relativeStepperError, stepper);
 		Simulator<decltype(ctrdStepper)> simulator(ctrdStepper, &bbsystem);
 
-		std::uniform_real_distribution<double> distributionNullB2Max(0, b2max);
+		uniform_real_distribution<double> distributionNullB2Max(0, b2max);
 		double b = sqrt(distributionNullB2Max(randomEngine));
 
 		target->randomize(randomEngine);
@@ -90,7 +92,7 @@ public:
 		stream.flush();
 
 		if (tracking) {
-			printer = new Printer(std::to_string(round) + ".csv");
+			printer = new Printer(to_string(round) + ".csv");
 			printer->addField(&printField);
 			simulator.setPrinter(*printer);
 		}
@@ -99,12 +101,12 @@ public:
 		double time = simulator.simulate(0.0, 1.0, 0.0001, *condition, 50);
 
 		if (time < 0.0) {
-			stream << "Distance error" << std::endl;
+			stream << "Distance error" << endl;
 			return -1;
 		}
 
 		if (abs(energy - bbsystem.getSystemEnergy()) / energy > relativeEnergyError) {
-			stream << "Energy error: " << energy << " vs. " << bbsystem.getSystemEnergy() << std::endl;
+			stream << "Energy error: " << energy << " vs. " << bbsystem.getSystemEnergy() << endl;
 			return -2;
 		}
 
@@ -112,21 +114,21 @@ public:
 		bool eBoundToProjec = Utils::isBound(bbsystem, target->getElectron("1s1"), projectile);
 
 		if (eBoundToTarget && eBoundToProjec) {
-			stream << "\t" << round << " --> Molecule" << std::endl;
+			stream << "\t" << round << " --> Molecule" << endl;
 			undecided++;
 		}
 
 		if (eBoundToTarget && !eBoundToProjec) {
-			stream << std::endl;
+			stream << endl;
 		}
 
 		if (!eBoundToTarget && eBoundToProjec) {
-			stream << "\t" << round << " --> Electron Capture" << std::endl;
+			stream << "\t" << round << " --> Electron Capture" << endl;
 			ecapture++;
 		}
 
 		if (!eBoundToTarget && !eBoundToProjec) {
-			stream << "\t" << round << " --> Ionization" << std::endl;
+			stream << "\t" << round << " --> Ionization" << endl;
 			ionization++;
 		}
 

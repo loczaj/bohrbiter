@@ -6,6 +6,7 @@
 #include <simulbody/simulator.hpp>
 
 using namespace simulbody;
+using namespace std;
 
 class Experiment {
 public:
@@ -14,18 +15,18 @@ public:
 	virtual int run(int round, bool tracking, bool skipUntracked) = 0;
 	virtual int close(int successfulRounds) = 0;
 
-	static int track(Experiment &experiment, std::initializer_list<int> roundsToTrack) {
-		int rounds = *std::max_element(roundsToTrack.begin(), roundsToTrack.end());
+	static int track(Experiment &experiment, initializer_list<int> roundsToTrack) {
+		int rounds = *max_element(roundsToTrack.begin(), roundsToTrack.end());
 		return carryOut(experiment, rounds, false, roundsToTrack, true);
 	}
 
 	static int carryOut(Experiment &experiment, int numberOfRounds, bool seedRandom = false,
-			std::initializer_list<int> roundsToTrack = { }, bool skipUntracked = false) {
+			initializer_list<int> roundsToTrack = { }, bool skipUntracked = false) {
 
 		int result = experiment.open(numberOfRounds, seedRandom);
 		if (result != 0) {
 			experiment.close(0);
-			std::cout << "Failed to open experiment. (" << result << ")" << std::endl;
+			cout << "Failed to open experiment. (" << result << ")" << endl;
 			return result;
 		}
 
@@ -37,39 +38,39 @@ public:
 		for (round = 0; round < numberOfRounds; round++) {
 			while (displayed < 100 * (round + 1)) {
 				if (star % 10 == 0)
-					std::cout << star / 10;
+					cout << star / 10;
 				else
-					std::cout << "*";
+					cout << "*";
 
-				std::cout.flush();
+				cout.flush();
 				displayed += numberOfRounds;
 				star++;
 			}
 
 			bool tracking = true;
-			if (std::find(roundsToTrack.begin(), roundsToTrack.end(), (round + 1)) == roundsToTrack.end())
+			if (find(roundsToTrack.begin(), roundsToTrack.end(), (round + 1)) == roundsToTrack.end())
 				tracking = false;
 
 			result = experiment.run(round + 1, tracking, skipUntracked);
 			if (result != 0) {
-				std::cout << std::endl << "Round " << (round + 1) << " failed with: " << result << " ";
+				cout << endl << "Round " << (round + 1) << " failed with: " << result << " ";
 			} else {
 				successfulRounds++;
 			}
 		}
 
-		std::cout << std::endl;
+		cout << endl;
 		result = experiment.close(successfulRounds);
 
-		std::cout << successfulRounds << " rounds passed." << std::endl;
+		cout << successfulRounds << " rounds passed." << endl;
 
 		if (numberOfRounds != successfulRounds)
-			std::cout << numberOfRounds - successfulRounds << " rounds failed." << std::endl;
+			cout << numberOfRounds - successfulRounds << " rounds failed." << endl;
 
 		if (result != 0)
-			std::cout << "Failed to close experiment. (" << result << ")" << std::endl;
+			cout << "Failed to close experiment. (" << result << ")" << endl;
 		else
-			std::cout << "Experiment completed." << std::endl;
+			cout << "Experiment completed." << endl;
 
 		return result;
 	}
