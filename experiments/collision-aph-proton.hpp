@@ -23,6 +23,9 @@ class CollisionAbrinesPercivalHydrogenWithProton: public Experiment {
 
 	double b2max;
 	double projectileVelocity;
+	double absoluteStepperError;
+	double relativeStepperError;
+	double relativeEnergyError;
 
 	int ionization = 0;
 	int ecapture = 0;
@@ -33,8 +36,11 @@ class CollisionAbrinesPercivalHydrogenWithProton: public Experiment {
 
 public:
 
-	CollisionAbrinesPercivalHydrogenWithProton(double impact2max, double voltagekV) {
-		b2max = impact2max;
+	CollisionAbrinesPercivalHydrogenWithProton(double impact2max, double voltagekV,
+			double absoluteStepperError, double relativeStepperError, double relativeEnergyError)
+			: b2max(impact2max), absoluteStepperError(absoluteStepperError), relativeStepperError(
+					relativeStepperError), relativeEnergyError(relativeEnergyError) {
+
 		projectileVelocity = Utils::calculateAcceleratedVelocityInAU(Atom::protonMass, 1.0, voltagekV);
 
 		projectile = bbsystem.createBody(Atom::protonMass);
@@ -60,7 +66,7 @@ public:
 
 	int run(int round, bool tracking, bool skipUntracked) {
 		runge_kutta_dopri5<Phase> stepper;
-		auto ctrdStepper = make_controlled(1e-10, 1e-10, stepper);
+		auto ctrdStepper = make_controlled(absoluteStepperError, relativeStepperError, stepper);
 		Simulator<decltype(ctrdStepper)> simulator(ctrdStepper, &bbsystem);
 
 		std::uniform_real_distribution<double> distributionNullB2Max(0, b2max);
@@ -94,7 +100,7 @@ public:
 			return -1;
 		}
 
-		if (abs(energy - bbsystem.getSystemEnergy()) / energy > 1e-8) {
+		if (abs(energy - bbsystem.getSystemEnergy()) / energy > relativeEnergyError) {
 			stream << "Energy error: " << energy << " vs. " << bbsystem.getSystemEnergy() << std::endl;
 			return -2;
 		}
