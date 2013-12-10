@@ -31,9 +31,6 @@ class CollisionAbrinesPercivalHydrogenWithProton: public Experiment {
 	int ecapture = 0;
 	int undecided = 0;
 
-	double ionizationCrossSection = 0.0;
-	double ecaptureCrossSection = 0.0;
-
 public:
 
 	CollisionAbrinesPercivalHydrogenWithProton(double impact2max, double voltagekV,
@@ -125,13 +122,11 @@ public:
 
 		if (!eBoundToTarget && eBoundToProjec) {
 			stream << "\t" << round << " --> Electron Capture" << std::endl;
-			ecaptureCrossSection += b;
 			ecapture++;
 		}
 
 		if (!eBoundToTarget && !eBoundToProjec) {
 			stream << "\t" << round << " --> Ionization" << std::endl;
-			ionizationCrossSection += b;
 			ionization++;
 		}
 
@@ -143,21 +138,16 @@ public:
 	}
 
 	int close(int successfulRounds) {
-		double ionizationPercentage = ((double) ionization) / ((double) successfulRounds) * 100.0;
-		double ecapturePercentage = ((double) ecapture) / ((double) successfulRounds) * 100.0;
-		double undecidedPercentage = ((double) undecided) / ((double) successfulRounds) * 100.0;
-		cout << "Ionization: " << ionization << " (" << ionizationPercentage << " %)" << endl;
-		cout << "El.Capture: " << ecapture << " (" << ecapturePercentage << " %)" << endl;
-		cout << "Undecided:  " << undecided << " (" << undecidedPercentage << " %)" << endl << endl;
+		double ionizationRate = ((double) ionization) / ((double) successfulRounds);
+		double ecaptureRate = ((double) ecapture) / ((double) successfulRounds);
+		double undecidedRate = ((double) undecided) / ((double) successfulRounds);
+		cout << "Ionization: " << ionization << " (" << ionizationRate * 100.0 << " %)" << endl;
+		cout << "El.Capture: " << ecapture << " (" << ecaptureRate * 100.0 << " %)" << endl;
+		cout << "Undecided:  " << undecided << " (" << undecidedRate * 100.0 << " %)" << endl << endl;
 		cout << "Cross sections:" << endl;
 
-		ionizationCrossSection *= 2 * M_PI * sqrt(b2max);
-		ionizationCrossSection /= ((double) successfulRounds);
-		cout << "\t Ionization: " << ionizationCrossSection << endl;
-
-		ecaptureCrossSection *= 2 * M_PI * sqrt(b2max);
-		ecaptureCrossSection /= ((double) successfulRounds);
-		cout << "\t El.Capture: " << ecaptureCrossSection << endl << endl;
+		cout << "\t Ionization: " << ionizationRate * M_PI * b2max << endl;
+		cout << "\t El.Capture: " << ecaptureRate * M_PI * b2max << endl << endl;
 
 		stream.close();
 		return 0;
