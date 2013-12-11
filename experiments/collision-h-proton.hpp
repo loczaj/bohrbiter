@@ -16,7 +16,7 @@ class CollisionAbrinesPercivalHydrogenWithProton: public Experiment {
 	PositionPrintField printField;
 
 	identifier projectile;
-	AbrinesPercivalHydrogen* target;
+	AbrinesPercivalAtom* hydrogen;
 	DistanceCondition* condition;
 	Interaction* coulombProjectileElectron;
 	Interaction* coulombProjectileNucleus;
@@ -41,13 +41,13 @@ public:
 		projectileVelocity = Utils::calculateAcceleratedVelocityInAU(Atom::protonMass, 1.0, voltagekV);
 
 		projectile = bbsystem.createBody(Atom::protonMass);
-		target = new AbrinesPercivalHydrogen(&bbsystem, Element::H, 1.00782503207);
-		condition = new DistanceCondition(projectile, target->getNucleus(), 35.0);
+		hydrogen = new AbrinesPercivalAtom(&bbsystem, Element::H, 1.00782503207);
+		condition = new DistanceCondition(projectile, hydrogen->getNucleus(), 35.0);
 		printer = nullptr;
 
-		coulombProjectileElectron = new CoulombInteraction(-1.0, projectile, target->getElectron("1s1"));
-		coulombProjectileNucleus = new CoulombInteraction(target->getNucleusCharge(), projectile,
-				target->getNucleus());
+		coulombProjectileElectron = new CoulombInteraction(-1.0, projectile, hydrogen->getElectron("1s1"));
+		coulombProjectileNucleus = new CoulombInteraction(hydrogen->getNucleusCharge(), projectile,
+				hydrogen->getNucleus());
 
 		bbsystem.addInteraction(coulombProjectileElectron);
 		bbsystem.addInteraction(coulombProjectileNucleus);
@@ -68,9 +68,9 @@ public:
 		uniform_real_distribution<double> distributionNullB2Max(0, b2max);
 		double b = sqrt(distributionNullB2Max(randomEngine));
 
-		target->randomize("1s1", randomEngine);
-		target->setPosition(vector3D(0, 0, 0));
-		target->setVelocity(vector3D(0, 0, 0));
+		hydrogen->randomize("1s1", randomEngine);
+		hydrogen->setPosition(vector3D(0, 0, 0));
+		hydrogen->setVelocity(vector3D(0, 0, 0));
 
 		bbsystem.setBodyPosition(projectile, vector3D(0, b, -20));
 		bbsystem.setBodyVelocity(projectile, vector3D(0, 0, projectileVelocity));
@@ -101,8 +101,8 @@ public:
 			return -2;
 		}
 
-		bool eBoundToTarget = Utils::isBound(bbsystem, target->getElectron("1s1"), target->getNucleus());
-		bool eBoundToProjec = Utils::isBound(bbsystem, target->getElectron("1s1"), projectile);
+		bool eBoundToTarget = Utils::isBound(bbsystem, hydrogen->getElectron("1s1"), hydrogen->getNucleus());
+		bool eBoundToProjec = Utils::isBound(bbsystem, hydrogen->getElectron("1s1"), projectile);
 
 		if (eBoundToTarget && eBoundToProjec) {
 			stream << "\t" << round << " --> Molecule" << endl;

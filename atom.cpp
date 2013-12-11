@@ -4,14 +4,14 @@ using namespace simulbody;
 using namespace std;
 
 Atom::Atom(System* system, Element element, double atomicMass)
-		: Atom(system, element, atomicMass, element) {
+		: Atom(system, element, element, atomicMass) {
 }
 
-Atom::Atom(System* system, Element element, double atomicMass, Element electronConfiguration)
-		: system(system), element(element), electronConfiguration(electronConfiguration) {
+Atom::Atom(System* system, Element electronConfiguration, Element nucleusElement, double atomicMass)
+		: system(system), electronConfiguration(electronConfiguration), nucleusElement(nucleusElement) {
 
-	nucleusMass = PeriodicTable::nucleusMassInAU(element, atomicMass);
-	nucleusCharge = (double) PeriodicTable::atomicNumber(element);
+	nucleusMass = PeriodicTable::nucleusMassInAU(nucleusElement, atomicMass);
+	nucleusCharge = (double) PeriodicTable::atomicNumber(nucleusElement);
 	nucleus = system->createBody(nucleusMass);
 	reducedMass = (electronMass * nucleusMass) / (electronMass + nucleusMass);
 
@@ -77,6 +77,18 @@ void Atom::setVelocity(vector3D velocity) {
 	vector3D delta = velocity - getVelocity();
 	for (identifier body : getBodies()) {
 		system->setBodyVelocity(body, system->getBodyVelocity(body) + delta);
+	}
+}
+
+void Atom::install() {
+	for (string orbitName : orbitNames) {
+		install(orbitName);
+	}
+}
+
+void Atom::randomize(std::mt19937_64 &randomEngine) {
+	for (string orbitName : orbitNames) {
+		randomize(orbitName, randomEngine);
 	}
 }
 

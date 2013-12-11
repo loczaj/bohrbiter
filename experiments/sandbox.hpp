@@ -12,7 +12,7 @@ class SandboxExperiment: public Experiment {
 
 	int run(int round, bool tracking, bool skipUntracked) {
 		simulbody::System bbsystem;
-		AbrinesPercivalHydrogen hydrogen(&bbsystem, Element::H, 1.00782503207);
+		AbrinesPercivalAtom hydrogen(&bbsystem, Element::H, 1.00782503207);
 
 		std::mt19937_64 randomEngine;
 		randomEngine.seed(std::mt19937_64::default_seed);

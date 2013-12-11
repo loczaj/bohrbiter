@@ -9,31 +9,44 @@
 
 using namespace simulbody;
 
-class AbrinesPercivalHydrogen: public Atom {
+class AbrinesPercivalAtom: public Atom {
 
 public:
-	AbrinesPercivalHydrogen(System* system)
-			: AbrinesPercivalHydrogen(system, Element::H, 1.00782503207) {
+	AbrinesPercivalAtom(System* system, Element element, double atomicMass)
+			: AbrinesPercivalAtom(system, element, element, atomicMass) {
 	}
 
-	AbrinesPercivalHydrogen(System* system, Element nucleus, double atomicMass)
-			: Atom(system, nucleus, atomicMass, Element::H) {
+	AbrinesPercivalAtom(System* system, Element electronConfig, Element nucleusElement, double atomicMass)
+			: Atom(system, electronConfig, nucleusElement, atomicMass) {
+
 		createInteractions();
-		install("1s1");
+		Atom::install();
 	}
 
 	virtual void install(std::string orbit) {
-		system->setBodyPosition(getNucleus(), vector3D(0, 0, 0));
-		system->setBodyVelocity(getNucleus(), vector3D(0, 0, 0));
 
-		system->setBodyPosition(getElectron("1s1"), vector3D(0, (1.0 / (reducedMass * nucleusCharge)), 0));
-		system->setBodyVelocity(getElectron("1s1"), vector3D(0, 0, nucleusCharge));
+		// Yet only Helium is supported
+		assert(orbit == "1s1" || orbit == "1s2");
+
+		vector3D r(0, 1.0 / (reducedMass * nucleusCharge), 0);
+		vector3D v(0, 0, nucleusCharge);
+
+		if (orbit == "1s2") {
+			r = -r;
+			v = -v;
+		}
+		system->setBodyPosition(getElectron(orbit), system->getBodyPosition(nucleus) + r);
+		system->setBodyVelocity(getElectron(orbit), system->getBodyVelocity(nucleus) + v);
 
 		this->setPosition(vector3D(0, 0, 0));
 		this->setVelocity(vector3D(0, 0, 0));
 	}
 
 	virtual void randomize(std::string orbit, std::mt19937_64 &randomEngine) {
+
+		// Yet only Helium is supported
+		assert(orbit == "1s1" || orbit == "1s2");
+
 		std::uniform_real_distribution<double> distMinusPiPi(-M_PI, M_PI);
 		std::uniform_real_distribution<double> distMinusOneOne(-1, 1);
 		std::uniform_real_distribution<double> distNull2Pi(0, 2 * M_PI);
@@ -57,14 +70,28 @@ public:
 		vector3D C0 = C00.eulerRotation(phi, theta, eta);
 		vector3D P0 = P00.eulerRotation(phi, theta, eta);
 
-		system->setBodyPosition(getElectron("1s1"), system->getBodyPosition(nucleus) + C0);
-		system->setBodyVelocity(getElectron("1s1"), system->getBodyVelocity(nucleus) + P0 / reducedMass);
+		if (orbit == "1s2") {
+			C0 = -C0;
+			P0 = -P0;
+		}
+		system->setBodyPosition(getElectron(orbit), system->getBodyPosition(nucleus) + C0);
+		system->setBodyVelocity(getElectron(orbit), system->getBodyVelocity(nucleus) + P0 / reducedMass);
 	}
 
 	virtual void createInteractions() {
-		interactions.resize(1);
-		interactions[0] = new CoulombInteraction(-1.0 * nucleusCharge, getNucleus(), getElectron("1s1"));
-		system->addInteraction(interactions[0]);
+		interactions.clear();
+
+		for (identifier e1 : getElectrons()) {
+			for (identifier e2 : getElectrons()) {
+				if (e1 < e2)
+					interactions.push_back(new CoulombInteraction(1.0, e1, e2));
+			}
+			interactions.push_back(new CoulombInteraction(-1.0 * nucleusCharge, e1, nucleus));
+		}
+
+		for (Interaction* interaction : interactions) {
+			system->addInteraction(interaction);
+		}
 	}
 
 private:

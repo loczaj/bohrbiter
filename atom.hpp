@@ -13,8 +13,8 @@ class Atom {
 protected:
 	System* system;
 
-	Element element;
 	Element electronConfiguration;
+	Element nucleusElement;
 
 	double reducedMass;
 	double nucleusMass;
@@ -28,7 +28,7 @@ public:
 	std::vector<std::string> orbitNames;
 
 	Atom(System* system, Element element, double atomicMass);
-	Atom(System* system, Element element, double atomicMass, Element electronConfiguration);
+	Atom(System* system, Element electronConfiguration, Element nucleusElement, double atomicMass);
 
 	identifier getNucleus() const;
 	std::vector<identifier> getElectrons() const;
@@ -45,8 +45,12 @@ public:
 	void setPosition(vector3D position);
 	void setVelocity(vector3D velocity);
 
+	virtual void install();
 	virtual void install(std::string orbit) = 0;
+
+	virtual void randomize(std::mt19937_64 &randomEngine);
 	virtual void randomize(std::string orbit, std::mt19937_64 &randomEngine) = 0;
+
 	virtual void createInteractions() = 0;
 
 	virtual double getEnergy() const;
