@@ -68,7 +68,7 @@ public:
 		uniform_real_distribution<double> distributionNullB2Max(0, b2max);
 		double b = sqrt(distributionNullB2Max(randomEngine));
 
-		target->randomize(randomEngine);
+		target->randomize("1s1", randomEngine);
 		target->setPosition(vector3D(0, 0, 0));
 		target->setVelocity(vector3D(0, 0, 0));
 

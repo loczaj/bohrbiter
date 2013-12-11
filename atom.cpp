@@ -13,6 +13,7 @@ Atom::Atom(System* system, Element element, double atomicMass, Element electronC
 	nucleusMass = PeriodicTable::nucleusMassInAU(element, atomicMass);
 	nucleusCharge = (double) PeriodicTable::atomicNumber(element);
 	nucleus = system->createBody(nucleusMass);
+	reducedMass = (electronMass * nucleusMass) / (electronMass + nucleusMass);
 
 	orbitNames = PeriodicTable().atomicOrbitals(electronConfiguration);
 	for (string orbitName : orbitNames) {

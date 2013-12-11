@@ -10,7 +10,6 @@
 using namespace simulbody;
 
 class AbrinesPercivalHydrogen: public Atom {
-	double reducedMass;
 
 public:
 	AbrinesPercivalHydrogen(System* system)
@@ -19,12 +18,11 @@ public:
 
 	AbrinesPercivalHydrogen(System* system, Element nucleus, double atomicMass)
 			: Atom(system, nucleus, atomicMass, Element::H) {
-		reducedMass = (electronMass * nucleusMass) / (electronMass + nucleusMass);
 		createInteractions();
-		install();
+		install("1s1");
 	}
 
-	virtual void install() {
+	virtual void install(std::string orbit) {
 		system->setBodyPosition(getNucleus(), vector3D(0, 0, 0));
 		system->setBodyVelocity(getNucleus(), vector3D(0, 0, 0));
 
@@ -35,7 +33,7 @@ public:
 		this->setVelocity(vector3D(0, 0, 0));
 	}
 
-	virtual void randomize(std::mt19937_64 &randomEngine) {
+	virtual void randomize(std::string orbit, std::mt19937_64 &randomEngine) {
 		std::uniform_real_distribution<double> distMinusPiPi(-M_PI, M_PI);
 		std::uniform_real_distribution<double> distMinusOneOne(-1, 1);
 		std::uniform_real_distribution<double> distNull2Pi(0, 2 * M_PI);
