@@ -2,7 +2,7 @@
 #include <boost/numeric/odeint.hpp>
 #include <simulbody/simulator.hpp>
 
-#include "../ap-hydrogen.hpp"
+#include "../abrines-percival.hpp"
 #include "../experiment.hpp"
 
 using namespace std;
