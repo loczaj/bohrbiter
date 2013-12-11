@@ -60,7 +60,7 @@ struct PeriodicTable {
 	}
 
 	static double nucleusMassInAU(Element const element, double atomicMass) {
-		return atomicMass / 5.485799095 * 10000 - 1.0 * atomicNumber(element);
+		return atomicMass / 5.485799095 * 10000 - 1.0 * ((double)atomicNumber(element));
 	}
 };
 

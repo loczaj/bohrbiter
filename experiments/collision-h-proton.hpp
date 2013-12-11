@@ -29,7 +29,7 @@ class CollisionAbrinesPercivalHydrogenWithProton: public Experiment {
 
 	int ionization = 0;
 	int ecapture = 0;
-	int undecided = 0;
+	int extended = 0;
 
 public:
 
@@ -42,7 +42,7 @@ public:
 
 		projectile = bbsystem.createBody(Atom::protonMass);
 		hydrogen = new AbrinesPercivalAtom(&bbsystem, Element::H, 1.00782503207);
-		condition = new DistanceCondition(projectile, hydrogen->getNucleus(), 35.0);
+		condition = new DistanceCondition(projectile, hydrogen->getNucleus(), 51.0);
 		printer = nullptr;
 
 		coulombProjectileElectron = new CoulombInteraction(-1.0, projectile, hydrogen->getElectron("1s1"));
@@ -72,7 +72,7 @@ public:
 		hydrogen->setPosition(vector3D(0, 0, 0));
 		hydrogen->setVelocity(vector3D(0, 0, 0));
 
-		bbsystem.setBodyPosition(projectile, vector3D(0, b, -20));
+		bbsystem.setBodyPosition(projectile, vector3D(0, b, -50.0));
 		bbsystem.setBodyVelocity(projectile, vector3D(0, 0, projectileVelocity));
 
 		if (skipUntracked && !tracking) {
@@ -88,25 +88,39 @@ public:
 			simulator.setPrinter(*printer);
 		}
 
+		if (condition->evaluate(bbsystem.phase, 0)) {
+			stream << "\t" << "Initial condition error" << endl;
+			return -3;
+		}
+
 		double energy = bbsystem.getSystemEnergy();
-		double time = simulator.simulate(0.0, 1.0, 0.0001, *condition, 50);
+		double time = simulator.simulate(0.0, 1.0, 0.0001, *condition, 100);
+		bool eBoundToTarget;
+		bool eBoundToProjec;
 
-		if (time < 0.0) {
-			stream << "Distance error" << endl;
-			return -1;
-		}
+		while (true) {
 
-		if (abs(energy - bbsystem.getSystemEnergy()) / energy > relativeEnergyError) {
-			stream << "Energy error: " << energy << " vs. " << bbsystem.getSystemEnergy() << endl;
-			return -2;
-		}
+			if (time < 0.0) {
+				stream << "\t" << "Distance not reached error" << endl;
+				return -1;
+			}
 
-		bool eBoundToTarget = Utils::isBound(bbsystem, hydrogen->getElectron("1s1"), hydrogen->getNucleus());
-		bool eBoundToProjec = Utils::isBound(bbsystem, hydrogen->getElectron("1s1"), projectile);
+			if (abs((energy - bbsystem.getSystemEnergy()) / energy) > relativeEnergyError) {
+				stream << "\t" << "Energy error: " << energy << " vs. " << bbsystem.getSystemEnergy() << endl;
+				return -2;
+			}
 
-		if (eBoundToTarget && eBoundToProjec) {
-			stream << "\t" << round << " --> Molecule" << endl;
-			undecided++;
+			eBoundToTarget = Utils::isBound(bbsystem, hydrogen->getElectron("1s1"), hydrogen->getNucleus());
+			eBoundToProjec = Utils::isBound(bbsystem, hydrogen->getElectron("1s1"), projectile);
+
+			if (!eBoundToTarget || !eBoundToProjec) {
+				break;
+			}
+
+			stream << " " << round << " Extend Run";
+			simulator.simulate(time, time + 1.0, 0.0001);
+			time += 1.0;
+			extended++;
 		}
 
 		if (eBoundToTarget && !eBoundToProjec) {
@@ -133,10 +147,10 @@ public:
 	int close(int successfulRounds) {
 		double ionizationRate = ((double) ionization) / ((double) successfulRounds);
 		double ecaptureRate = ((double) ecapture) / ((double) successfulRounds);
-		double undecidedRate = ((double) undecided) / ((double) successfulRounds);
+		double extendedRate = ((double) extended) / ((double) successfulRounds);
 		cout << "Ionization: " << ionization << " (" << ionizationRate * 100.0 << " %)" << endl;
 		cout << "El.Capture: " << ecapture << " (" << ecaptureRate * 100.0 << " %)" << endl;
-		cout << "Undecided:  " << undecided << " (" << undecidedRate * 100.0 << " %)" << endl << endl;
+		cout << "Extended run: " << extended << " (" << extendedRate * 100.0 << " %)" << endl << endl;
 		cout << "Cross sections:" << endl;
 
 		cout << "\t Ionization: " << ionizationRate * M_PI * b2max << endl;
