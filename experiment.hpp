@@ -48,16 +48,6 @@ public:
 		int star = 1;
 
 		for (round = 0; round < numberOfRounds; round++) {
-			while (displayed < 100 * (round + 1)) {
-				if (star % 10 == 0)
-					cout << star / 10;
-				else
-					cout << "*";
-
-				cout.flush();
-				displayed += numberOfRounds;
-				star++;
-			}
 
 			bool tracking = true;
 			if (find(roundsToTrack.begin(), roundsToTrack.end(), (round + 1)) == roundsToTrack.end())
@@ -68,6 +58,17 @@ public:
 				cout << endl << "Round " << (round + 1) << " failed with: " << result << " ";
 			} else {
 				successfulRounds++;
+			}
+
+			while (displayed < 100 * (round + 1)) {
+				if (star % 10 == 0)
+					cout << star / 10;
+				else
+					cout << "*";
+
+				cout.flush();
+				displayed += numberOfRounds;
+				star++;
 			}
 		}
 
