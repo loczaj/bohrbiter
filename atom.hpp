@@ -45,12 +45,8 @@ public:
 	void setPosition(vector3D position);
 	void setVelocity(vector3D velocity);
 
-	virtual void install();
-	virtual void install(std::string orbit) = 0;
-
-	virtual void randomize(std::mt19937_64 &randomEngine);
-	virtual void randomize(std::string orbit, std::mt19937_64 &randomEngine) = 0;
-
+	virtual void install() = 0;
+	virtual void randomize(std::mt19937_64 &randomEngine) = 0;
 	virtual void createInteractions() = 0;
 
 	virtual double getEnergy() const;

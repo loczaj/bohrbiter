@@ -80,18 +80,6 @@ void Atom::setVelocity(vector3D velocity) {
 	}
 }
 
-void Atom::install() {
-	for (string orbitName : orbitNames) {
-		install(orbitName);
-	}
-}
-
-void Atom::randomize(std::mt19937_64 &randomEngine) {
-	for (string orbitName : orbitNames) {
-		randomize(orbitName, randomEngine);
-	}
-}
-
 double Atom::getEnergy() const {
 	double energy = 0.0;
 

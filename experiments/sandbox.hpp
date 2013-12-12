@@ -31,7 +31,7 @@ class SandboxExperiment: public Experiment {
 		cout << hydrogen.getOrbitalEnergy("1s1") << "\t" << hydrogen.getEnergy() << endl;
 
 		for (int i = 0; i < 10; i++) {
-			hydrogen.randomize("1s1", randomEngine);
+			hydrogen.randomize(randomEngine);
 			cout << hydrogen.getOrbitalEnergy("1s1") << "\t" << hydrogen.getEnergy() << endl;
 		}
 

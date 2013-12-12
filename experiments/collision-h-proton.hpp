@@ -68,7 +68,7 @@ public:
 		uniform_real_distribution<double> distributionNullB2Max(0, b2max);
 		double b = sqrt(distributionNullB2Max(randomEngine));
 
-		hydrogen->randomize("1s1", randomEngine);
+		hydrogen->randomize(randomEngine);
 		hydrogen->setPosition(vector3D(0, 0, 0));
 		hydrogen->setVelocity(vector3D(0, 0, 0));
 

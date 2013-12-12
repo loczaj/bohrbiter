@@ -3,6 +3,7 @@
 
 #include <random>
 #include <simulbody/simulator.hpp>
+#include <stdexcept>
 #include <cmath>
 
 #include "atom.hpp"
@@ -19,33 +20,30 @@ public:
 	AbrinesPercivalAtom(System* system, Element electronConfig, Element nucleusElement, double atomicMass)
 			: Atom(system, electronConfig, nucleusElement, atomicMass) {
 
+		if (electronConfiguration != Element::H && electronConfiguration != Element::He) {
+			throw new std::invalid_argument("AbrinesPercivalAtom supports only Hydrogen and Helium.");
+		}
+
 		createInteractions();
-		Atom::install();
 	}
 
-	virtual void install(std::string orbit) {
-
-		// Yet only Helium is supported
-		assert(orbit == "1s1" || orbit == "1s2");
-
+	virtual void install() {
 		vector3D r(0, 1.0 / (reducedMass * nucleusCharge), 0);
 		vector3D v(0, 0, nucleusCharge);
 
-		if (orbit == "1s2") {
-			r = -r;
-			v = -v;
+		system->setBodyPosition(getElectron("1s1"), system->getBodyPosition(nucleus) + r);
+		system->setBodyVelocity(getElectron("1s1"), system->getBodyVelocity(nucleus) + v);
+
+		if (electronConfiguration == Element::He) {
+			system->setBodyPosition(getElectron("1s2"), system->getBodyPosition(nucleus) - r);
+			system->setBodyVelocity(getElectron("1s2"), system->getBodyVelocity(nucleus) - v);
 		}
-		system->setBodyPosition(getElectron(orbit), system->getBodyPosition(nucleus) + r);
-		system->setBodyVelocity(getElectron(orbit), system->getBodyVelocity(nucleus) + v);
 
 		this->setPosition(vector3D(0, 0, 0));
 		this->setVelocity(vector3D(0, 0, 0));
 	}
 
-	virtual void randomize(std::string orbit, std::mt19937_64 &randomEngine) {
-
-		// Yet only Helium is supported
-		assert(orbit == "1s1" || orbit == "1s2");
+	virtual void randomize(std::mt19937_64 &randomEngine) {
 
 		std::uniform_real_distribution<double> distMinusPiPi(-M_PI, M_PI);
 		std::uniform_real_distribution<double> distMinusOneOne(-1, 1);
@@ -70,12 +68,13 @@ public:
 		vector3D C0 = C00.eulerRotation(phi, theta, eta);
 		vector3D P0 = P00.eulerRotation(phi, theta, eta);
 
-		if (orbit == "1s2") {
-			C0 = -C0;
-			P0 = -P0;
+		system->setBodyPosition(getElectron("1s1"), system->getBodyPosition(nucleus) + C0);
+		system->setBodyVelocity(getElectron("1s1"), system->getBodyVelocity(nucleus) + P0 / reducedMass);
+
+		if (electronConfiguration == Element::He) {
+			system->setBodyPosition(getElectron("1s2"), system->getBodyPosition(nucleus) - C0);
+			system->setBodyVelocity(getElectron("1s2"), system->getBodyVelocity(nucleus) - P0 / reducedMass);
 		}
-		system->setBodyPosition(getElectron(orbit), system->getBodyPosition(nucleus) + C0);
-		system->setBodyVelocity(getElectron(orbit), system->getBodyVelocity(nucleus) + P0 / reducedMass);
 	}
 
 	virtual void createInteractions() {
