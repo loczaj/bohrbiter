@@ -20,24 +20,24 @@ public:
 	virtual int run(int round, bool tracking, bool skipUntracked) = 0;
 	virtual int close(int successfulRounds) = 0;
 
-	static int track(Experiment &experiment, initializer_list<int> roundsToTrack) {
+	int track(vector<int> roundsToTrack) {
 		int rounds = *max_element(roundsToTrack.begin(), roundsToTrack.end());
-		return carryOut(experiment, rounds, false, roundsToTrack, true);
+		return carryOut(rounds, false, roundsToTrack, true);
 	}
 
-	static int carryOut(Experiment &experiment, int numberOfRounds, bool seedRandom = false,
-			initializer_list<int> roundsToTrack = { }, bool skipUntracked = false) {
+	int carryOut(int numberOfRounds, bool seedRandom = false, vector<int> roundsToTrack = { },
+			bool skipUntracked = false) {
 
 		if (seedRandom) {
 			random_device rdev { };
-			experiment.randomEngine.seed(rdev());
+			this->randomEngine.seed(rdev());
 		} else {
-			experiment.randomEngine.seed(mt19937_64::default_seed);
+			this->randomEngine.seed(mt19937_64::default_seed);
 		}
 
-		int result = experiment.open(numberOfRounds, seedRandom);
+		int result = this->open(numberOfRounds, seedRandom);
 		if (result != 0) {
-			experiment.close(0);
+			this->close(0);
 			cout << "Failed to open experiment. (" << result << ")" << endl;
 			return result;
 		}
@@ -53,7 +53,7 @@ public:
 			if (find(roundsToTrack.begin(), roundsToTrack.end(), (round + 1)) == roundsToTrack.end())
 				tracking = false;
 
-			result = experiment.run(round + 1, tracking, skipUntracked);
+			result = this->run(round + 1, tracking, skipUntracked);
 			if (result != 0) {
 				cout << endl << "Round " << (round + 1) << " failed with: " << result << " ";
 			} else {
@@ -73,7 +73,7 @@ public:
 		}
 
 		cout << endl;
-		result = experiment.close(successfulRounds);
+		result = this->close(successfulRounds);
 
 		cout << successfulRounds << " rounds passed." << endl;
 
