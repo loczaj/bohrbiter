@@ -1,10 +1,10 @@
-#ifndef HELIUM_HPP
-#define HELIUM_HPP
+#ifndef COLLISION_HE_PROTON_HPP
+#define COLLISION_HE_PROTON_HPP
 
 #include <boost/numeric/odeint.hpp>
 #include <simulbody/simulator.hpp>
 
-#include "../abrines-percival.hpp"
+#include "../kirschbaum-wilets.hpp"
 #include "../experiment.hpp"
 
 class CollisionHeliumWithProton: public Experiment {
@@ -14,12 +14,12 @@ class CollisionHeliumWithProton: public Experiment {
 	System bbsystem;
 	PositionPrintField printField;
 
-	AbrinesPercivalAtom *helium = nullptr;
+	KirschbaumWiletsAtom *helium = nullptr;
 
 public:
 
 	int open(int numberOfRounds, bool seedRandom) {
-		helium = new AbrinesPercivalAtom(&bbsystem, Element::He, 4.00260325);
+		helium = new KirschbaumWiletsAtom(&bbsystem, Element::He, 4.00260325);
 		return 0;
 	}
 
@@ -28,8 +28,8 @@ public:
 		auto ctrdStepper = make_controlled(1e-10, 1e-10, stepper);
 		Simulator<decltype(ctrdStepper)> simulator(ctrdStepper, &bbsystem);
 
-		helium->randomize(randomEngine);
-		//helium->install();
+		//helium->randomize(randomEngine);
+		helium->install();
 
 		Printer printer("helium-" + std::to_string(round) + ".csv");
 		printer.addField(new PositionPrintField());
@@ -53,5 +53,5 @@ public:
 
 };
 
-#endif /* HELIUM_HPP */
+#endif /* COLLISION_HE_PROTON_HPP */
 
