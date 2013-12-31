@@ -13,19 +13,19 @@ class Atom {
 protected:
 	System* system;
 
-	Element electronConfiguration;
-	Element nucleusElement;
-
-	double reducedMass;
-	double nucleusMass;
-	double nucleusCharge;
-
 	identifier nucleus;
 	std::map<std::string, identifier> electrons;
 	std::vector<Interaction*> interactions;
 
 public:
+	Element electronConfiguration;
+	Element nucleusElement;
+
 	std::vector<std::string> orbitNames;
+
+	double reducedMass;
+	double nucleusMass;
+	double nucleusCharge;
 
 	Atom(System* system, Element element, double atomicMass);
 	Atom(System* system, Element electronConfiguration, Element nucleusElement, double atomicMass);
