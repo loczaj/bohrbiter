@@ -4,6 +4,8 @@
 #include <map>
 #include <tuple>
 
+#include "elements.hpp"
+
 using namespace std;
 
 struct CohenConfiguration {
@@ -19,16 +21,24 @@ struct CohenConfiguration {
 		orbits["2:1s2"] = CohenOrbit(0.5714, 3.1416, 0.0000, 1.6686, 3.1416, 0.0000, false);
 	}
 
-	vector3D position(Element const element, string orbit) {
-		return vector3D();
+	vector3D position(const Element &element, const string &orbit) {
+		CohenOrbit cohenOrbit = orbits.at(key(element, orbit));
+		vector3D position(get<0>(cohenOrbit), get<1>(cohenOrbit), get<2>(cohenOrbit));
+		return position.convertFromSphericalToCartesian();
 	}
 
-	vector3D velocity(Element const element, string orbit) {
-		return vector3D();
+	vector3D momentum(const Element &element, const string &orbit) {
+		CohenOrbit cohenOrbit = orbits.at(key(element, orbit));
+		vector3D momentum(get<3>(cohenOrbit), get<4>(cohenOrbit), get<5>(cohenOrbit));
+		return momentum.convertFromSphericalToCartesian();
 	}
 
-	bool spin(Element const element, string orbit) {
-		return true;
+	bool spin(const Element &element, const string &orbit) {
+		return get<6>(orbits.at(key(element, orbit)));
+	}
+
+	string key(const Element &element, const string &orbit) {
+		return to_string(PeriodicTable::atomicNumber(element)) + ":" + orbit;
 	}
 
 };
