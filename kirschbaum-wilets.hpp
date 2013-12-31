@@ -78,7 +78,6 @@ public:
 
 };
 
-
 class KirschbaumWiletsAtom: public Atom {
 
 public:
@@ -93,9 +92,35 @@ public:
 	}
 
 	virtual void install() {
+
+		CohenConfiguration configuration;
+
+		system->setBodyPosition(nucleus, vector3D(0.0, 0.0, 0.0));
+		system->setBodyVelocity(nucleus, vector3D(0.0, 0.0, 0.0));
+
+		for (string orbit : orbitNames) {
+			system->setBodyPosition(getElectron(orbit), configuration.position(electronConfiguration, orbit));
+			system->setBodyVelocity(getElectron(orbit), configuration.momentum(electronConfiguration, orbit));
+		}
 	}
 
 	virtual void randomize(std::mt19937_64 &randomEngine) {
+		std::uniform_real_distribution<double> distMinusPiPi(-M_PI, M_PI);
+		std::uniform_real_distribution<double> distMinusOneOne(-1, 1);
+
+		double phi = distMinusPiPi(randomEngine);
+		double eta = distMinusPiPi(randomEngine);
+		double theta = acos(distMinusOneOne(randomEngine));
+
+		install();
+
+		for (string orbit : orbitNames) {
+			identifier electron = getElectron(orbit);
+			system->setBodyPosition(electron,
+					system->getBodyPosition(electron).eulerRotation(phi, theta, eta));
+			system->setBodyVelocity(electron,
+					system->getBodyVelocity(electron).eulerRotation(phi, theta, eta));
+		}
 	}
 
 	virtual void createInteractions() {
