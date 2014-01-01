@@ -13,19 +13,19 @@ class Atom {
 protected:
 	System* system;
 
-	identifier nucleus;
-	std::map<std::string, identifier> electrons;
-	std::vector<Interaction*> interactions;
-
-public:
 	Element electronConfiguration;
 	Element nucleusElement;
-
-	std::vector<std::string> orbitNames;
 
 	double reducedMass;
 	double nucleusMass;
 	double nucleusCharge;
+
+	identifier nucleus;
+	std::vector<std::string> orbitNames;
+	std::map<std::string, identifier> electrons;
+	std::vector<Interaction*> interactions;
+
+public:
 
 	Atom(System* system, Element element, double atomicMass);
 	Atom(System* system, Element electronConfiguration, Element nucleusElement, double atomicMass);
@@ -35,12 +35,20 @@ public:
 	std::vector<identifier> getBodies() const;
 	identifier getElectron(std::size_t orbit) const;
 	identifier getElectron(std::string orbitName) const;
+	std::vector<Interaction*> getInteractions() const;
 
 	vector3D getPosition() const;
 	vector3D getVelocity() const;
 	vector3D getImpulse() const;
+
 	double getMass() const;
+	double getReducedMass() const;
+	double getNucleusMass() const;
 	double getNucleusCharge() const;
+
+	Element getNucleusElement() const;
+	Element getElectronConfiguration() const;
+	std::vector<string> getOrbitNames() const;
 
 	void setPosition(vector3D position);
 	void setVelocity(vector3D velocity);

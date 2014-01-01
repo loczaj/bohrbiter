@@ -46,6 +46,10 @@ identifier Atom::getElectron(string orbitName) const {
 	return electrons.at(orbitName);
 }
 
+std::vector<Interaction*> Atom::getInteractions() const {
+	return interactions;
+}
+
 vector3D Atom::getPosition() const {
 	return system->getGroupCenterOfMass(getBodies());
 }
@@ -62,8 +66,28 @@ double Atom::getMass() const {
 	return system->getGroupMass(getBodies());
 }
 
+double Atom::getReducedMass() const {
+	return reducedMass;
+}
+
+double Atom::getNucleusMass() const {
+	return nucleusMass;
+}
+
 double Atom::getNucleusCharge() const {
 	return nucleusCharge;
+}
+
+Element Atom::getNucleusElement() const {
+	return nucleusElement;
+}
+
+Element Atom::getElectronConfiguration() const {
+	return electronConfiguration;
+}
+
+std::vector<string> Atom::getOrbitNames() const {
+	return orbitNames;
 }
 
 void Atom::setPosition(vector3D position) {

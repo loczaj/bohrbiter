@@ -35,14 +35,14 @@ public:
 		printer.addField(new PositionPrintField());
 		simulator.setPrinter(printer);
 
-		cout << "Electron config: " << static_cast<int>(helium->electronConfiguration) << endl;
-		cout << "Nucleus element: " << static_cast<int>(helium->nucleusElement) << endl;
-		cout << "Nucleus charge: " << helium->nucleusCharge << endl;
-		cout << "Nucleus mass: " << helium->nucleusMass << endl;
-		cout << "Reduced mass: " << helium->reducedMass << endl;
+		cout << "Electron config: " << static_cast<int>(helium->getElectronConfiguration()) << endl;
+		cout << "Nucleus element: " << static_cast<int>(helium->getNucleusElement()) << endl;
+		cout << "Nucleus charge: " << helium->getNucleusCharge() << endl;
+		cout << "Nucleus mass: " << helium->getNucleusMass() << endl;
+		cout << "Reduced mass: " << helium->getReducedMass() << endl;
 		cout << "Number of bodies: " << helium->getBodies().size() << endl;
 		cout << "Orbits: ";
-		for (string orbit : helium->orbitNames) {
+		for (string orbit : helium->getOrbitNames()) {
 			cout << orbit << " ";
 		}
 		cout << endl << endl;
