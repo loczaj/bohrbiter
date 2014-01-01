@@ -15,10 +15,10 @@ struct CohenConfiguration {
 	map<string, CohenOrbit> orbits;
 
 	CohenConfiguration() {
-		orbits["1:1s1"] = CohenOrbit(1.0000, 0.0000, 0.0000, 0.9535, 0.0000, 0.0000, true);
+		orbits["1:1s1"] = CohenOrbit(1.0000, 0.00, 0.0000, 0.9535, 0.00, 0.0000, true);
 
-		orbits["2:1s1"] = CohenOrbit(0.5714, 0.0000, 0.0000, 1.6686, 0.0000, 0.0000, true);
-		orbits["2:1s2"] = CohenOrbit(0.5714, 3.1416, 0.0000, 1.6686, 3.1416, 0.0000, false);
+		orbits["2:1s1"] = CohenOrbit(0.5714, 0.00, 0.0000, 1.6686, 0.00, 0.0000, true);
+		orbits["2:1s2"] = CohenOrbit(0.5714, M_PI, 0.0000, 1.6686, M_PI, 0.0000, false);
 	}
 
 	vector3D position(const Element &element, const string &orbit) {
