@@ -7,7 +7,7 @@
 #include "../abrines-percival.hpp"
 #include "../experiment.hpp"
 
-class HeliumExperiment: public Experiment {
+class AbrinesPercivalHeliumExperiment: public Experiment {
 
 	std::ofstream stream;
 

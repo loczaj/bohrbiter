@@ -3,8 +3,8 @@
 
 #include "experiment.hpp"
 #include "experiments/collision-h-proton.hpp"
-#include "experiments/collision-he-proton.hpp"
-#include "experiments/helium.hpp"
+#include "experiments/helium-ap.hpp"
+#include "experiments/helium-kw.hpp"
 #include "experiments/sandbox.hpp"
 
 namespace po = boost::program_options;
@@ -57,13 +57,13 @@ int main(int argc, char* argv[]) {
 			std::cout << "Carry out proton + hidrogen collision experiment." << std::endl;
 			experiment = new CollisionAbrinesPercivalHydrogenWithProton(b2max, voltage, 1e-9, 1e-9, 1e-6);
 
-		} else if (vm["name"].as<string>() == "He") {
-			std::cout << "Carry out helium experiment." << std::endl;
-			experiment = new HeliumExperiment();
+		} else if (vm["name"].as<string>() == "apHe") {
+			std::cout << "Carry out Abrines-Percival helium experiment." << std::endl;
+			experiment = new AbrinesPercivalHeliumExperiment();
 
-		} else if (vm["name"].as<string>() == "p+He") {
-			std::cout << "Carry out proton + helium collision experiment." << std::endl;
-			experiment = new CollisionHeliumWithProton();
+		} else if (vm["name"].as<string>() == "kwHe") {
+			std::cout << "Carry out Kirschbaum-Wilets helium experiment." << std::endl;
+			experiment = new KirschbaumWiletsHeliumExperiment();
 		}
 	}
 

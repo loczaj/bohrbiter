@@ -110,8 +110,7 @@ public:
 
 		install();
 
-		for (string orbit : orbitNames) {
-			identifier electron = getElectron(orbit);
+		for (identifier electron : getElectrons()) {
 			system->setBodyPosition(electron,
 					system->getBodyPosition(electron).eulerRotation(phi, theta, eta));
 			system->setBodyVelocity(electron,

@@ -7,7 +7,7 @@
 #include "../kirschbaum-wilets.hpp"
 #include "../experiment.hpp"
 
-class CollisionHeliumWithProton: public Experiment {
+class KirschbaumWiletsHeliumExperiment: public Experiment {
 
 	std::ofstream stream;
 
@@ -53,7 +53,7 @@ public:
 		cout << "  1s2 : " << helium->getOrbitalEnergy("1s2") << endl << endl;
 
 		double energy = bbsystem.getSystemEnergy();
-		double time = simulator.simulate(0.0, 10000.0, 0.0001);
+		double time = simulator.simulate(0.0, 2500.0, 0.0001);
 
 		cout << "Energy: " << bbsystem.getSystemEnergy() << endl;
 		cout << "  1s1 : " << helium->getOrbitalEnergy("1s1") << endl;
