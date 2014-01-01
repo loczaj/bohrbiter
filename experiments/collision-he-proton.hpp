@@ -41,6 +41,7 @@ public:
 		cout << "Nucleus mass: " << helium->getNucleusMass() << endl;
 		cout << "Reduced mass: " << helium->getReducedMass() << endl;
 		cout << "Number of bodies: " << helium->getBodies().size() << endl;
+		cout << "Number of inters: " << helium->getInteractions().size() << endl;
 		cout << "Orbits: ";
 		for (string orbit : helium->getOrbitNames()) {
 			cout << orbit << " ";
@@ -52,7 +53,7 @@ public:
 		cout << "  1s2 : " << helium->getOrbitalEnergy("1s2") << endl << endl;
 
 		double energy = bbsystem.getSystemEnergy();
-		double time = simulator.simulate(0.0, 220, 0.0001);
+		double time = simulator.simulate(0.0, 10000.0, 0.0001);
 
 		cout << "Energy: " << bbsystem.getSystemEnergy() << endl;
 		cout << "  1s1 : " << helium->getOrbitalEnergy("1s1") << endl;
@@ -61,7 +62,7 @@ public:
 		if (time < 0.0)
 			return -1;
 
-		if (abs((energy - bbsystem.getSystemEnergy()) / energy) > 1e-4)
+		if (abs((energy - bbsystem.getSystemEnergy()) / energy) > 1e-5)
 			return -2;
 
 		return 0;
