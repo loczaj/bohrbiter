@@ -1,3 +1,6 @@
+#ifndef SANDBOX_HPP
+#define SANDBOX_HPP
+
 #include <fstream>
 #include <boost/numeric/odeint.hpp>
 #include <simulbody/simulator.hpp>
@@ -42,3 +45,6 @@ class SandboxExperiment: public Experiment {
 		return 0;
 	}
 };
+
+#endif /* SANDBOX_HPP */
+

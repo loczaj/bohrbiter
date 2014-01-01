@@ -1,3 +1,6 @@
+#ifndef COLLISION_H_PROTON_HPP
+#define COLLISION_H_PROTON_HPP
+
 #include <fstream>
 #include <boost/numeric/odeint.hpp>
 #include <simulbody/simulator.hpp>
@@ -160,3 +163,5 @@ public:
 		return 0;
 	}
 };
+
+#endif /* COLLISION_H_PROTON_HPP */

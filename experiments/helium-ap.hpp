@@ -1,5 +1,5 @@
-#ifndef HELIUM_HPP
-#define HELIUM_HPP
+#ifndef HELIUM_AP_HPP
+#define HELIUM_AP_HPP
 
 #include <boost/numeric/odeint.hpp>
 #include <simulbody/simulator.hpp>
@@ -53,5 +53,5 @@ public:
 
 };
 
-#endif /* HELIUM_HPP */
+#endif /* HELIUM_AP_HPP */
 

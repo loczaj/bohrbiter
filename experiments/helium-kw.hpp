@@ -1,5 +1,5 @@
-#ifndef COLLISION_HE_PROTON_HPP
-#define COLLISION_HE_PROTON_HPP
+#ifndef HELIUM_KW_HPP
+#define HELIUM_KW_HPP
 
 #include <boost/numeric/odeint.hpp>
 #include <simulbody/simulator.hpp>
@@ -74,5 +74,5 @@ public:
 
 };
 
-#endif /* COLLISION_HE_PROTON_HPP */
+#endif /* HELIUM_KW_HPP */
 
