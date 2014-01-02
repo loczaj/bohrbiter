@@ -18,8 +18,6 @@ private:
 	double xi, xi2, xi4;
 	double nucleusMass;
 
-	vector3D cv;
-
 	double r2 = 0, r4 = 0;
 	double p2 = 0, p4 = 0;
 	double exponent = 0, factor = 0, cvfactor = 0;
@@ -51,10 +49,10 @@ public:
 		applyForceOnEarth(dxdt, -F);
 
 		cvfactor = -p2 * r2 * exponent / (xi2 * mu);
-		cv = v * cvfactor;
+		vcoll = v * cvfactor;
 
-		addCollateralVelocityOnMoon(dxdt, cv);
-		addCollateralVelocityOnEarth(dxdt, -cv / nucleusMass);
+		addCollateralVelocityOnMoon(dxdt, vcoll);
+		addCollateralVelocityOnEarth(dxdt, -vcoll / nucleusMass);
 	}
 
 	virtual double getEnergy(const Phase &phase) override {
