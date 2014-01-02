@@ -3,6 +3,7 @@
 
 #include "experiment.hpp"
 #include "experiments/collision-h-proton.hpp"
+#include "experiments/collision-he-proton.hpp"
 #include "experiments/helium-ap.hpp"
 #include "experiments/helium-kw.hpp"
 #include "experiments/sandbox.hpp"
@@ -56,6 +57,10 @@ int main(int argc, char* argv[]) {
 		} else if (vm["name"].as<string>() == "p+H") {
 			std::cout << "Carry out proton + hidrogen collision experiment." << std::endl;
 			experiment = new CollisionAbrinesPercivalHydrogenWithProton(b2max, voltage, 1e-9, 1e-9, 1e-6);
+
+		} else if (vm["name"].as<string>() == "p+He") {
+			std::cout << "Carry out proton + helium collision experiment." << std::endl;
+			experiment = new CollisionKirschbaumWiletsHeliumWithProton(b2max, voltage, 1e-9, 1e-9, 1e-6);
 
 		} else if (vm["name"].as<string>() == "apHe") {
 			std::cout << "Carry out Abrines-Percival helium experiment." << std::endl;
