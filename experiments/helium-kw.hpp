@@ -25,14 +25,19 @@ public:
 
 	int run(int round, bool tracking, bool skipUntracked) override {
 		runge_kutta_dopri5<Phase> stepper;
-		auto ctrstepper = make_controlled(1e-6, 1e-6, stepper);
+		auto ctrstepper = make_controlled(1e-8, 1e-8, stepper);
 		Simulator<decltype(ctrstepper)> simulator(ctrstepper, &bbsystem);
 
 		//helium->randomize(randomEngine);
 		helium->install();
 
 		Printer printer("helium-" + std::to_string(round) + ".csv");
-		printer.addField(new PositionPrintField());
+		printer.addField(new TimePrintField());
+		printer.addField(
+				new BodyPrintField(1, { Coord::x, Coord::y, Coord::z, Coord::vx, Coord::vy, Coord::vz }));
+		printer.addField(new InteractionPrintField(helium->getInteractions()[1], InteractionAttribute::force));
+		printer.addField(new InteractionPrintField(helium->getInteractions()[2], InteractionAttribute::force));
+		printer.addField(new InteractionPrintField(helium->getInteractions()[2], InteractionAttribute::collateralVelocity));
 		simulator.setPrinter(printer);
 
 		cout << "Electron config: " << static_cast<int>(helium->getElectronConfiguration()) << endl;
