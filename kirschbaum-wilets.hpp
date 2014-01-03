@@ -104,7 +104,7 @@ public:
 
 		double phi = distMinusPiPi(randomEngine);
 		double eta = distMinusPiPi(randomEngine);
-		double theta = acos(distMinusOneOne(randomEngine));
+		double theta = distMinusPiPi(randomEngine);//acos(distMinusOneOne(randomEngine));
 
 		install();
 
@@ -126,7 +126,7 @@ public:
 			}
 			interactions.push_back(new CoulombInteraction(-1.0 * nucleusCharge, nucleus, e1));
 			interactions.push_back(
-					new HeisenbergInteraction(5.0, reducedMass, 0.9535, nucleus, e1, nucleusMass));
+					new HeisenbergInteraction(5.0, reducedMass, 1.257, nucleus, e1, nucleusMass));
 		}
 
 		for (Interaction* interaction : interactions) {

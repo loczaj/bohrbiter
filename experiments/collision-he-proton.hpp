@@ -59,9 +59,9 @@ public:
 		coulombProjectileNucleus = new CoulombInteraction(helium->getNucleusCharge(), projectile,
 				helium->getNucleus());
 
-		heisenbergProjectile1s1 = new HeisenbergInteraction(5.0, 1.0, 0.9535, projectile,
+		heisenbergProjectile1s1 = new HeisenbergInteraction(5.0, 1.0, 1.0, projectile,
 				helium->getElectron("1s1"), Atom::protonMass);
-		heisenbergProjectile1s2 = new HeisenbergInteraction(5.0, 1.0, 0.9535, projectile,
+		heisenbergProjectile1s2 = new HeisenbergInteraction(5.0, 1.0, 1.0, projectile,
 				helium->getElectron("1s2"), Atom::protonMass);
 
 		bbsystem.addInteraction(coulombProjectile1s1);
