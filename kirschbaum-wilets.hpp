@@ -16,9 +16,15 @@ private:
 	double alpha;
 	double xi, xi2, xi4;
 
+	vector3D p;
+
 	double r2 = 0, r4 = 0;
 	double p2 = 0, p4 = 0;
-	double exponent = 0, factor = 0, cvfactor = 0;
+	double exponent = 0, factor = 0, vcollfactor = 0;
+
+	double muSlashXi2 = 0;
+	double xi2DotMu = 0;
+	double xi2SlashAlphaSlashMuSlash2 = 0;
 
 public:
 	HeisenbergInteraction(double alpha, double xi, identifier nucleus, identifier electron)
@@ -28,6 +34,14 @@ public:
 		this->setBodies(nucleus, electron);
 	}
 
+	virtual void setBodyMasses(double earthMass, double moonMass) override {
+		Interaction::setBodyMasses(earthMass, moonMass);
+
+		muSlashXi2 = reducedMass / xi2;
+		xi2DotMu = xi2 * reducedMass;
+		xi2SlashAlphaSlashMuSlash2 = xi2 / alpha / reducedMass / 2;
+	}
+
 	virtual void apply(const Phase &x, Phase &dxdt, const double t) override {
 
 		calculateRelativePositionR(x);
@@ -35,18 +49,20 @@ public:
 		r4 = r2 * r2;
 
 		calculateRelativeVelocityV(x);
-		p2 = v.scalarProduct(v); // electron mass = 1.0
+		p = v * reducedMass;
+		p2 = p.scalarProduct(p);
 		p4 = p2 * p2;
 
 		exponent = exp(alpha * (1 - r4 * p4 / xi4));
-		factor = xi2 * exponent / (2 * alpha * reducedMass * r4) + p4 * exponent / (xi2 * reducedMass);
+		factor = xi2SlashAlphaSlashMuSlash2 * exponent / r4 + p4 * exponent / xi2DotMu;
 		F = r * factor;
 
 		applyForceOnMoon(dxdt, F);
 		applyForceOnEarth(dxdt, -F);
 
-		cvfactor = -p2 * r2 * exponent / (xi2 * reducedMass);
-		vcoll = v * cvfactor;
+		// A Here we assume moonMass=1 (Heisenberg-interaction applies to electrons)
+		vcollfactor = -p2 * muSlashXi2 * r2 * exponent;
+		vcoll = v * vcollfactor;
 
 		addCollateralVelocityOnMoon(dxdt, vcoll);
 		addCollateralVelocityOnEarth(dxdt, -vcoll / earthMass);
@@ -58,7 +74,8 @@ public:
 		r4 = r2 * r2;
 
 		calculateRelativeVelocityV(phase);
-		p2 = v.scalarProduct(v);
+		p = v * reducedMass;
+		p2 = p.scalarProduct(p);
 		p4 = p2 * p2;
 
 		return xi2 * exp(alpha * (1 - r4 * p4 / xi4)) / (4 * alpha * r2 * reducedMass);
