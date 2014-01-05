@@ -122,13 +122,28 @@ double Atom::getEnergy() const {
 	return energy;
 }
 
-double Atom::getOrbitalEnergy(std::string orbit) const {
+double Atom::getIonizationEnergy(std::string orbit) const {
 	double energy = 0.0;
 
 	identifier e1 = getElectron(orbit);
 	for (identifier e2 : getElectrons()) {
 		if (e1 != e2)
 			energy += system->getPairPotentialEnergy(e1, e2);
+	}
+
+	energy += system->getPairPotentialEnergy(e1, nucleus);
+	energy += system->getBodyKineticEnergyReferenced(e1, nucleus);
+
+	return energy;
+}
+
+double Atom::getOrbitalEnergy(std::string orbit) const {
+	double energy = 0.0;
+
+	identifier e1 = getElectron(orbit);
+	for (identifier e2 : getElectrons()) {
+		if (e1 != e2)
+			energy += system->getPairPotentialEnergy(e1, e2) / 2;
 	}
 
 	energy += system->getPairPotentialEnergy(e1, nucleus);

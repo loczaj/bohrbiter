@@ -58,6 +58,7 @@ public:
 	virtual void createInteractions() = 0;
 
 	virtual double getEnergy() const;
+	virtual double getIonizationEnergy(std::string orbit) const;
 	virtual double getOrbitalEnergy(std::string orbit) const;
 	virtual vector3D getOrbitalAngularMomentum(std::string orbit) const;
 
