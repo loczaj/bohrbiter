@@ -14,18 +14,15 @@ class HeisenbergInteraction: public Interaction {
 
 private:
 	double alpha;
-	double mu;
 	double xi, xi2, xi4;
-	double nucleusMass;
 
 	double r2 = 0, r4 = 0;
 	double p2 = 0, p4 = 0;
 	double exponent = 0, factor = 0, cvfactor = 0;
 
 public:
-	HeisenbergInteraction(double alpha, double mu, double xi, identifier nucleus, identifier electron,
-			double nucleusMass)
-			: alpha(alpha), mu(mu), xi(xi), nucleusMass(nucleusMass) {
+	HeisenbergInteraction(double alpha, double xi, identifier nucleus, identifier electron)
+			: alpha(alpha), xi(xi) {
 		xi2 = xi * xi;
 		xi4 = xi2 * xi2;
 		this->setBodies(nucleus, electron);
@@ -42,17 +39,17 @@ public:
 		p4 = p2 * p2;
 
 		exponent = exp(alpha * (1 - r4 * p4 / xi4));
-		factor = xi2 * exponent / (2 * alpha * mu * r4) + p4 * exponent / (xi2 * mu);
+		factor = xi2 * exponent / (2 * alpha * reducedMass * r4) + p4 * exponent / (xi2 * reducedMass);
 		F = r * factor;
 
 		applyForceOnMoon(dxdt, F);
 		applyForceOnEarth(dxdt, -F);
 
-		cvfactor = -p2 * r2 * exponent / (xi2 * mu);
+		cvfactor = -p2 * r2 * exponent / (xi2 * reducedMass);
 		vcoll = v * cvfactor;
 
 		addCollateralVelocityOnMoon(dxdt, vcoll);
-		addCollateralVelocityOnEarth(dxdt, -vcoll / nucleusMass);
+		addCollateralVelocityOnEarth(dxdt, -vcoll / earthMass);
 	}
 
 	virtual double getEnergy(const Phase &phase) override {
@@ -64,7 +61,7 @@ public:
 		p2 = v.scalarProduct(v);
 		p4 = p2 * p2;
 
-		return xi2 * exp(alpha * (1 - r4 * p4 / xi4)) / (4 * alpha * r2 * mu);
+		return xi2 * exp(alpha * (1 - r4 * p4 / xi4)) / (4 * alpha * r2 * reducedMass);
 	}
 
 	virtual ~HeisenbergInteraction() override {
@@ -104,7 +101,7 @@ public:
 
 		double phi = distMinusPiPi(randomEngine);
 		double eta = distMinusPiPi(randomEngine);
-		double theta = distMinusPiPi(randomEngine);//acos(distMinusOneOne(randomEngine));
+		double theta = distMinusPiPi(randomEngine); //acos(distMinusOneOne(randomEngine));
 
 		install();
 
@@ -125,8 +122,7 @@ public:
 					interactions.push_back(new CoulombInteraction(1.0, e1, e2));
 			}
 			interactions.push_back(new CoulombInteraction(-1.0 * nucleusCharge, nucleus, e1));
-			interactions.push_back(
-					new HeisenbergInteraction(5.0, reducedMass, 1.257, nucleus, e1, nucleusMass));
+			interactions.push_back(new HeisenbergInteraction(5.0, 1.257, nucleus, e1));
 		}
 
 		for (Interaction* interaction : interactions) {
