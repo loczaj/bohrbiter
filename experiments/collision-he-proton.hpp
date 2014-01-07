@@ -141,48 +141,45 @@ public:
 			extended++;
 		}
 
-		if (e1s1BoundToTarget && e1s2BoundToTarget) {
+		string bindings;
+		for (bool bound : { e1s1BoundToTarget, e1s2BoundToTarget, e1s1BoundToProjec, e1s2BoundToProjec }) {
+			if (bound)
+				bindings.append("-");
+			else
+				bindings.append("+");
+		}
+
+		switch (Utils::hash(bindings.c_str())) {
+		case Utils::hash("--++"):
 			stream << endl;
-		}
-
-		if (e1s1BoundToProjec && e1s2BoundToTarget) {
-			stream << "\t" << round << " --> Single electron Capture" << endl;
-			ecapture1++;
-		}
-
-		if (e1s1BoundToTarget && e1s2BoundToProjec) {
-			stream << "\t" << round << " --> Single electron Capture" << endl;
-			ecapture1++;
-		}
-
-		if (e1s1BoundToProjec && e1s2BoundToProjec) {
-			stream << "\t" << round << " --> Dual electron Capture" << endl;
-			ecapture2++;
-		}
-
-		if (!e1s1BoundToTarget && !e1s1BoundToProjec && e1s2BoundToTarget) {
+			break;
+		case Utils::hash("+-++"):
+		case Utils::hash("-+++"):
 			stream << "\t" << round << " --> Single Ionization" << endl;
 			ionization1++;
-		}
-
-		if (e1s1BoundToTarget && !e1s2BoundToTarget && !e1s2BoundToProjec) {
-			stream << "\t" << round << " --> Single Ionization" << endl;
-			ionization1++;
-		}
-
-		if (!e1s1BoundToTarget && !e1s1BoundToProjec && !e1s2BoundToTarget && !e1s2BoundToProjec) {
+			break;
+		case Utils::hash("++++"):
 			stream << "\t" << round << " --> Dual Ionization" << endl;
 			ionization2++;
-		}
-
-		if (e1s1BoundToProjec && !e1s2BoundToTarget && !e1s2BoundToProjec) {
+			break;
+		case Utils::hash("+--+"):
+		case Utils::hash("-+-+"):
+		case Utils::hash("+-+-"):
+		case Utils::hash("-++-"):
+			stream << "\t" << round << " --> Single electron Capture" << endl;
+			ecapture1++;
+			break;
+		case Utils::hash("++--"):
+			stream << "\t" << round << " --> Dual electron Capture" << endl;
+			ecapture2++;
+			break;
+		case Utils::hash("++-+"):
+		case Utils::hash("+++-"):
 			stream << "\t" << round << " --> Ionization And Capture" << endl;
 			ionizationAndCapture++;
-		}
-
-		if (!e1s1BoundToProjec && !e1s1BoundToTarget && e1s2BoundToProjec) {
-			stream << "\t" << round << " --> Ionization And Capture" << endl;
-			ionizationAndCapture++;
+			break;
+		default:
+			throw new std::logic_error("Unhandled energy configuration.");
 		}
 
 		if (printer != nullptr)

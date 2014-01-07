@@ -103,6 +103,10 @@ struct Utils {
 		energy += system.getPairPotentialEnergy(body, reference);
 		return (energy < 0.0);
 	}
+
+	static constexpr unsigned int hash(const char *str, int offset = 0) {
+		return !str[offset] ? 5381 : (hash(str, offset + 1) * 33) ^ str[offset];
+	}
 };
 
 #endif /* EXPERIMENT_HPP */
