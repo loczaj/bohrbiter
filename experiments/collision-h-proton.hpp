@@ -36,12 +36,12 @@ class CollisionAbrinesPercivalHydrogenWithProton: public Experiment {
 
 public:
 
-	CollisionAbrinesPercivalHydrogenWithProton(double impact2max, double voltagekV,
+	CollisionAbrinesPercivalHydrogenWithProton(double impact2max, double energykeV,
 			double absoluteStepperError, double relativeStepperError, double relativeEnergyError)
 			: b2max(impact2max), absoluteStepperError(absoluteStepperError), relativeStepperError(
 					relativeStepperError), relativeEnergyError(relativeEnergyError) {
 
-		projectileVelocity = Utils::calculateAcceleratedVelocityInAU(Atom::protonMass, 1.0, voltagekV);
+		projectileVelocity = Utils::calculateAcceleratedVelocityInAU(Atom::protonMass, 1.0, energykeV);
 
 		projectile = bbsystem.createBody(Atom::protonMass);
 		hydrogen = new AbrinesPercivalAtom(&bbsystem, Element::H, 1.00782503207);

@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
 	    ("track,t", po::value<std::vector<int>>(), "MC iteration to track")
 	    ("iterations,i", po::value<int>(), "Number of MC iterations to do")
 	    ("b2max,b", po::value<double>(), "Maximal impact parameter square [au]")
-	    ("voltage,v", po::value<double>(), "Accelerator voltage [kV]")
+	    ("energy,e", po::value<double>(), "Projectile energy [keV]")
 	;
 
 	po::positional_options_description p;
@@ -43,9 +43,9 @@ int main(int argc, char* argv[]) {
 	if (vm.count("b2max"))
 		b2max = vm["b2max"].as<double>();
 
-	double voltage = 0;
-	if (vm.count("voltage"))
-		voltage = vm["voltage"].as<double>();
+	double energy = 0;
+	if (vm.count("energy"))
+		energy = vm["energy"].as<double>();
 
 	Experiment* experiment = nullptr;
 	if (vm.count("name")) {
@@ -56,11 +56,11 @@ int main(int argc, char* argv[]) {
 
 		} else if (vm["name"].as<string>() == "p+H") {
 			std::cout << "Carry out proton + hidrogen collision experiment." << std::endl;
-			experiment = new CollisionAbrinesPercivalHydrogenWithProton(b2max, voltage, 1e-9, 1e-9, 1e-6);
+			experiment = new CollisionAbrinesPercivalHydrogenWithProton(b2max, energy, 1e-9, 1e-9, 1e-6);
 
 		} else if (vm["name"].as<string>() == "p+He") {
 			std::cout << "Carry out proton + helium collision experiment." << std::endl;
-			experiment = new CollisionKirschbaumWiletsHeliumWithProton(b2max, voltage, 1e-9, 1e-9, 1e-6);
+			experiment = new CollisionKirschbaumWiletsHeliumWithProton(b2max, energy, 1e-8, 1e-8, 1e-6);
 
 		} else if (vm["name"].as<string>() == "apHe") {
 			std::cout << "Carry out Abrines-Percival helium experiment." << std::endl;

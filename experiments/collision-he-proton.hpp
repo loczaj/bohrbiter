@@ -42,12 +42,12 @@ class CollisionKirschbaumWiletsHeliumWithProton: public Experiment {
 
 public:
 
-	CollisionKirschbaumWiletsHeliumWithProton(double impact2max, double voltagekV,
+	CollisionKirschbaumWiletsHeliumWithProton(double impact2max, double energykeV,
 			double absoluteStepperError, double relativeStepperError, double relativeEnergyError)
 			: b2max(impact2max), absoluteStepperError(absoluteStepperError), relativeStepperError(
 					relativeStepperError), relativeEnergyError(relativeEnergyError) {
 
-		projectileVelocity = Utils::calculateAcceleratedVelocityInAU(Atom::protonMass, 1.0, voltagekV);
+		projectileVelocity = Utils::calculateAcceleratedVelocityInAU(Atom::protonMass, 1.0, energykeV);
 
 		projectile = bbsystem.createBody(Atom::protonMass);
 		helium = new KirschbaumWiletsAtom(&bbsystem, Element::He, 4.00260325);
@@ -163,8 +163,6 @@ public:
 			ionization2++;
 			break;
 		case Utils::hash("+--+"):
-		case Utils::hash("-+-+"):
-		case Utils::hash("+-+-"):
 		case Utils::hash("-++-"):
 			stream << "\t" << round << " --> Single electron Capture" << endl;
 			ecapture1++;
@@ -205,11 +203,11 @@ public:
 		cout << "Extended run: " << extended << " (" << extendedRate * 100.0 << " %)" << endl << endl;
 		cout << "Cross sections:" << endl;
 
-		cout << "\t Single ionization: " << ionizationRate1 * M_PI * b2max << endl;
-		cout << "\t Dual ionization  : " << ionizationRate2 * M_PI * b2max << endl;
-		cout << "\t Single el.Capture: " << ecaptureRate1 * M_PI * b2max << endl;
-		cout << "\t Dual el.Capture  : " << ecaptureRate2 * M_PI * b2max << endl;
-		cout << "\t Ionizat & Capture: " << ionAndEcaptRate * M_PI * b2max << endl << endl;
+		cout << "\t Single ionization: " << ionizationRate1 * M_PI * b2max * 0.28003 << endl;
+		cout << "\t Dual ionization  : " << ionizationRate2 * M_PI * b2max * 0.28003 << endl;
+		cout << "\t Single el.Capture: " << ecaptureRate1 * M_PI * b2max * 0.28003 << endl;
+		cout << "\t Dual el.Capture  : " << ecaptureRate2 * M_PI * b2max * 0.28003 << endl;
+		cout << "\t Ionizat & Capture: " << ionAndEcaptRate * M_PI * b2max * 0.28003 << endl << endl;
 
 		stream.close();
 		return 0;
