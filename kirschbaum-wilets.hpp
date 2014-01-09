@@ -139,7 +139,7 @@ public:
 					interactions.push_back(new CoulombInteraction(1.0, e1, e2));
 			}
 			interactions.push_back(new CoulombInteraction(-1.0 * nucleusCharge, nucleus, e1));
-			interactions.push_back(new HeisenbergInteraction(5.0, 0.9743, nucleus, e1));
+			interactions.push_back(new HeisenbergInteraction(45.0, 1.257, nucleus, e1));
 		}
 
 		for (Interaction* interaction : interactions) {

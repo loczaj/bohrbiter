@@ -17,8 +17,8 @@ struct CohenConfiguration {
 	CohenConfiguration() {
 		orbits["1:1s1"] = CohenOrbit(1.0000, 0.00, 0.0000, 0.9535, 0.00, 0.0000, true);
 
-		orbits["2:1s1"] = CohenOrbit(0.5424, 0.00, 0.0000, 1.7962, M_PI/2, 0.0000, true);
-		orbits["2:1s2"] = CohenOrbit(0.5424, M_PI, 0.0000, 1.7962, -M_PI/2, 0.0000, false);
+		orbits["2:1s1"] = CohenOrbit(0.903, 0.00, 0.0000, 1.392, M_PI/2, 0.0000, true);
+		orbits["2:1s2"] = CohenOrbit(0.903, M_PI, 0.0000, 1.392, -M_PI/2, 0.0000, false);
 	}
 
 	vector3D position(const Element &element, const string &orbit) {
