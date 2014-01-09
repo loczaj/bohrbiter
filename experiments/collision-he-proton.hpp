@@ -20,7 +20,6 @@ class CollisionKirschbaumWiletsHeliumWithProton: public Experiment {
 
 	identifier projectile;
 	KirschbaumWiletsAtom* helium;
-	DistanceCondition* condition;
 	Interaction* coulombProjectile1s1;
 	Interaction* coulombProjectile1s2;
 	Interaction* coulombProjectileNucleus;
@@ -28,6 +27,7 @@ class CollisionKirschbaumWiletsHeliumWithProton: public Experiment {
 	Interaction* heisenbergProjectile1s2;
 
 	double b2max;
+	double initialDistance = 50;
 	double projectileVelocity;
 	double absoluteStepperError;
 	double relativeStepperError;
@@ -51,7 +51,6 @@ public:
 
 		projectile = bbsystem.createBody(Atom::protonMass);
 		helium = new KirschbaumWiletsAtom(&bbsystem, Element::He, 4.00260325);
-		condition = new DistanceCondition(projectile, helium->getNucleus(), 51.0);
 		printer = nullptr;
 
 		coulombProjectile1s1 = new CoulombInteraction(-1.0, projectile, helium->getElectron("1s1"));
@@ -88,8 +87,10 @@ public:
 		helium->setPosition(vector3D(0, 0, 0));
 		helium->setVelocity(vector3D(0, 0, 0));
 
-		bbsystem.setBodyPosition(projectile, vector3D(0, b, -50.0));
+		bbsystem.setBodyPosition(projectile, vector3D(0, b, -initialDistance));
 		bbsystem.setBodyVelocity(projectile, vector3D(0, 0, projectileVelocity));
+
+		DistanceCondition condition(projectile, helium->getNucleus(), initialDistance + 1.0);
 
 		if (skipUntracked && !tracking) {
 			return 0;
@@ -104,13 +105,14 @@ public:
 			simulator.setPrinter(*printer);
 		}
 
-		if (condition->evaluate(bbsystem.phase, 0)) {
+		if (condition.evaluate(bbsystem.phase, 0)) {
 			stream << "\t" << "Initial condition error" << endl;
 			return -3;
 		}
 
+		int maxRounds = (int) (1.2 * (2.0 * initialDistance + 1.0) / projectileVelocity + 1.0);
 		double energy = bbsystem.getSystemEnergy();
-		double time = simulator.simulate(0.0, 1.0, 0.0001, *condition, 100);
+		double time = simulator.simulate(0.0, 1.0, 0.0001, condition, maxRounds);
 		bool e1s1BoundToTarget, e1s2BoundToTarget;
 		bool e1s1BoundToProjec, e1s2BoundToProjec;
 
