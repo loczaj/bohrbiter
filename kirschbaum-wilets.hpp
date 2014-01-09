@@ -117,8 +117,8 @@ public:
 		std::uniform_real_distribution<double> distMinusOneOne(-1, 1);
 
 		double phi = distMinusPiPi(randomEngine);
+		double theta = acos(distMinusOneOne(randomEngine));
 		double eta = distMinusPiPi(randomEngine);
-		double theta = distMinusPiPi(randomEngine); //acos(distMinusOneOne(randomEngine));
 
 		install();
 
