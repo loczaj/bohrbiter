@@ -20,7 +20,7 @@ private:
 
 	double r2 = 0, r4 = 0;
 	double p2 = 0, p4 = 0;
-	double exponent = 0, factor = 0, vcollfactor = 0;
+	double exponent = 0, forceFactor = 0, velocityFactor = 0;
 
 	double muSlashXi2 = 0;
 	double xi2DotMu = 0;
@@ -44,37 +44,37 @@ public:
 
 	virtual void apply(const Phase &x, Phase &dxdt, const double t) override {
 
-		calculateRelativePositionR(x);
-		r2 = r.scalarProduct(r);
+		calculateRelativePosition(x);
+		r2 = relativePosition.scalarProduct(relativePosition);
 		r4 = r2 * r2;
 
-		calculateRelativeVelocityV(x);
-		p = v * reducedMass;
+		calculateRelativeVelocity(x);
+		p = relativeVelocity * reducedMass;
 		p2 = p.scalarProduct(p);
 		p4 = p2 * p2;
 
 		exponent = exp(alpha * (1 - r4 * p4 / xi4));
-		factor = xi2SlashAlphaSlashMuSlash2 * exponent / r4 + p4 * exponent / xi2DotMu;
-		F = r * factor;
+		forceFactor = xi2SlashAlphaSlashMuSlash2 * exponent / r4 + p4 * exponent / xi2DotMu;
+		actingForce = relativePosition * forceFactor;
 
-		applyForceOnMoon(dxdt, F);
-		applyForceOnEarth(dxdt, -F);
+		applyForceOnMoon(dxdt, actingForce);
+		applyForceOnEarth(dxdt, -actingForce);
 
 		// A Here we assume moonMass=1 (Heisenberg-interaction applies to electrons)
-		vcollfactor = -p2 * muSlashXi2 * r2 * exponent;
-		vcoll = v * vcollfactor;
+		velocityFactor = -p2 * muSlashXi2 * r2 * exponent;
+		actingVelocity = relativeVelocity * velocityFactor;
 
-		addCollateralVelocityOnMoon(dxdt, vcoll);
-		addCollateralVelocityOnEarth(dxdt, -vcoll / earthMass);
+		addVelocityOnMoon(dxdt, actingVelocity);
+		addVelocityOnEarth(dxdt, -actingVelocity / earthMass);
 	}
 
 	virtual double getEnergy(const Phase &phase) override {
-		calculateRelativePositionR(phase);
-		r2 = r.scalarProduct(r);
+		calculateRelativePosition(phase);
+		r2 = relativePosition.scalarProduct(relativePosition);
 		r4 = r2 * r2;
 
-		calculateRelativeVelocityV(phase);
-		p = v * reducedMass;
+		calculateRelativeVelocity(phase);
+		p = relativeVelocity * reducedMass;
 		p2 = p.scalarProduct(p);
 		p4 = p2 * p2;
 

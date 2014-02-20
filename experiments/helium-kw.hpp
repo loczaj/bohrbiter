@@ -35,9 +35,9 @@ public:
 		printer.addField(new PositionPrintField());
 //		printer.addField(new TimePrintField());
 //		printer.addField(new BodyPrintField(1, { Coord::x, Coord::y, Coord::z, Coord::vx, Coord::vy, Coord::vz }));
-//		printer.addField(new InteractionPrintField(helium->getInteractions()[1], InteractionAttribute::force));
-//		printer.addField(new InteractionPrintField(helium->getInteractions()[2], InteractionAttribute::force));
-//		printer.addField(new InteractionPrintField(helium->getInteractions()[2], InteractionAttribute::collateralVelocity));
+//		printer.addField(new InteractionPrintField(helium->getInteractions()[1], InteractionAttribute::actingForce));
+//		printer.addField(new InteractionPrintField(helium->getInteractions()[2], InteractionAttribute::actingForce));
+//		printer.addField(new InteractionPrintField(helium->getInteractions()[2], InteractionAttribute::actingVelocity));
 		simulator.setPrinter(printer);
 
 		cout << "Electron config: " << static_cast<int>(helium->getElectronConfiguration()) << endl;
