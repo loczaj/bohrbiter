@@ -1,5 +1,5 @@
 exe experiment
-    : atom.cpp experiment.cpp ../simulbody//simulbody 
+    : atom.cpp abrines-percival.cpp experiment.cpp ../simulbody//simulbody 
     : <library>/usr/local/lib/libboost_program_options.a <include>../ <define>BOOST_ALL_NO_LIB=1
     : <cxxflags>-std=c++11
     ;
