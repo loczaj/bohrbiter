@@ -33,7 +33,7 @@ public:
 
 		Printer printer("helium-" + std::to_string(round) + ".csv");
 		printer.addField(new PositionPrintField());
-		simulator.setPrinter(printer);
+		simulator.setObserver(printer);
 
 		double energy = bbsystem.getSystemEnergy();
 		double time = simulator.simulate(0.0, 200.0, 0.0001);

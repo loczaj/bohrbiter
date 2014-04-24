@@ -88,7 +88,7 @@ public:
 		if (tracking) {
 			printer = new Printer(to_string(round) + ".csv");
 			printer->addField(&printField);
-			simulator.setPrinter(*printer);
+			simulator.setObserver(*printer);
 		}
 
 		if (condition->evaluate(bbsystem.phase, 0)) {

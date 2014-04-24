@@ -38,7 +38,7 @@ public:
 //		printer.addField(new InteractionPrintField(helium->getInteractions()[1], InteractionAttribute::actingForce));
 //		printer.addField(new InteractionPrintField(helium->getInteractions()[2], InteractionAttribute::actingForce));
 //		printer.addField(new InteractionPrintField(helium->getInteractions()[2], InteractionAttribute::actingVelocity));
-		simulator.setPrinter(printer);
+		simulator.setObserver(printer);
 
 		cout << "Electron config: " << static_cast<int>(helium->getElectronConfiguration()) << endl;
 		cout << "Nucleus element: " << static_cast<int>(helium->getNucleusElement()) << endl;
