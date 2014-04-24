@@ -58,6 +58,11 @@ public:
 		cout << "  1s1 : " << helium->getOrbitalEnergy("1s1") << endl;
 		cout << "  1s2 : " << helium->getOrbitalEnergy("1s2") << endl << endl;
 
+		cout << "Mass: " << endl;
+		cout << "  nuc : " << bbsystem.getBodyMass(helium->getNucleus()) << endl;
+		cout << "  1s1 : " << bbsystem.getBodyMass(helium->getElectron("1s1")) << endl;
+		cout << "  1s2 : " << bbsystem.getBodyMass(helium->getElectron("1s2")) << endl << endl;
+
 		double energy = bbsystem.getSystemEnergy();
 		double time = simulator.simulate(0.0, 150.0, 0.0001);
 
