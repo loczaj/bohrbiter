@@ -14,7 +14,7 @@ AbrinesPercivalAtom::AbrinesPercivalAtom(System* system, Element electronConfig,
 		: Atom(system, electronConfig, nucleusElement, atomicMass) {
 
 	if (electronConfiguration != Element::H && electronConfiguration != Element::He) {
-		throw new std::invalid_argument("AbrinesPercivalAtom supports only Hydrogen and Helium.");
+		throw std::invalid_argument("AbrinesPercivalAtom supports only Hydrogen and Helium.");
 	}
 
 	createInteractions();

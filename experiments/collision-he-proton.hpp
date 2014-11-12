@@ -179,7 +179,7 @@ public:
 			ionizationAndCapture++;
 			break;
 		default:
-			throw new std::logic_error("Unhandled energy configuration.");
+			throw std::logic_error("Unhandled energy configuration.");
 		}
 
 		if (printer != nullptr)
