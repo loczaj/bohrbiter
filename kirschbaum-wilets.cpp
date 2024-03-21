@@ -1,6 +1,8 @@
 #include <cmath>
 
 #include "kirschbaum-wilets.hpp"
+#include <simulbody/interactions/coulomb.hpp>
+
 
 using namespace simulbody;
 

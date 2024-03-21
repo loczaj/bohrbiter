@@ -3,6 +3,7 @@
 
 #include <random>
 #include <simulbody/simulator.hpp>
+#include <simulbody/interactions/coulomb.hpp>
 
 using namespace simulbody;
 using namespace std;

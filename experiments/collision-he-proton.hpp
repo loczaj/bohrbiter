@@ -4,6 +4,8 @@
 #include <fstream>
 #include <boost/numeric/odeint.hpp>
 #include <simulbody/simulator.hpp>
+#include <simulbody/printer.hpp>
+
 
 #include "../kirschbaum-wilets.hpp"
 #include "../experiment.hpp"

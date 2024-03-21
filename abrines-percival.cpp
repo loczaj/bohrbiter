@@ -2,6 +2,8 @@
 #include <cmath>
 
 #include "abrines-percival.hpp"
+#include <simulbody/interactions/coulomb.hpp>
+
 
 using namespace simulbody;
 

@@ -3,6 +3,8 @@
 
 #include <boost/numeric/odeint.hpp>
 #include <simulbody/simulator.hpp>
+#include <simulbody/printer.hpp>
+
 
 #include "../abrines-percival.hpp"
 #include "../experiment.hpp"
